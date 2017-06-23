@@ -22,21 +22,21 @@ private:
   int m_y = 0;
   unsigned int m_layer = 0;
 
-  std::weak_ptr<Sprite> m_parent;
+  std::shared_ptr<Sprite> m_parent;
 
 protected:
 public:
   Sprite();
   Sprite(std::shared_ptr<Texture> texture);
   Sprite(std::shared_ptr<Texture> texture, std::weak_ptr<SceneGraph> parent);
-  Sprite(std::shared_ptr<Texture> texture, std::weak_ptr<Sprite> parent);
+  Sprite(std::shared_ptr<Texture> texture, std::shared_ptr<Sprite> parent);
   void setPosition(glm::ivec3 pos);
   void setPosition(int x, int y);
   void setPosition(int x, int y, unsigned int layer);
   void setRotation(GLfloat rot);
   void setScale(glm::ivec3 scale);
   void setScale(unsigned int w, unsigned int h);
-  void setParent(std::weak_ptr<Sprite> parent);
+  void setParent(std::shared_ptr<Sprite> parent);
 
   unsigned int getWidth();
   unsigned int getHeight();
@@ -59,9 +59,9 @@ public:
   glm::ivec2 getAbsolutePosition(glm::ivec2 relative);
 
   // the matrices of a sprite are stored in a scenegraph (see scenegraph.hpp)
-  std::shared_ptr<SceneGraph> translation;
-  std::shared_ptr<SceneGraph> rotation;
-  std::shared_ptr<SceneGraph> scalation;
+  std::weak_ptr<SceneGraph> translation;
+  std::weak_ptr<SceneGraph> rotation;
+  std::weak_ptr<SceneGraph> scalation;
 
   // texture
   std::shared_ptr<Texture> tex;
@@ -135,7 +135,7 @@ public:
   unsigned int finishClick();
 
   /*
-      returns a weak ptr to the root node
+      returns a shared ptr to the root node of the scene graph
    */
   virtual std::weak_ptr<SceneGraph> getGraph();
 };

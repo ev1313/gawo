@@ -13,19 +13,25 @@ static const char* fss_colorpicking = "../data/shaders/colorpicking.fs";
 Sprite::Sprite() {}
 
 Sprite::Sprite(std::shared_ptr<Texture> texture)
-    : Sprite(texture, std::weak_ptr<SceneGraph>()) {}
+    : Sprite(texture, std::shared_ptr<SceneGraph>()) {}
 
 Sprite::Sprite(std::shared_ptr<Texture> texture, std::weak_ptr<SceneGraph> parent)
-    : translation(std::make_shared<SceneGraph>(parent, glm::mat4x4()))
-    , rotation(std::make_shared<SceneGraph>(translation, glm::mat4x4()))
-    , scalation(std::make_shared<SceneGraph>(rotation, glm::mat4x4()))
-    , tex(texture) {
-  translation->addChild(rotation);
-  rotation->addChild(scalation);
+    : tex(texture) {
 
-  if (auto p = parent.lock()) {
-    p->addChild(translation);
-  }
+  if (auto p = parent.lock())
+    translation = p->addChild(glm::mat4x4());
+  else
+    translation = std::make_shared<SceneGraph>(glm::mat4x4());
+
+  if (auto t = translation.lock())
+    rotation = t->addChild(glm::mat4x4());
+  else
+    throw std::runtime_error("sprite::constructor failed translation lock");
+
+  if (auto r = rotation.lock())
+    scalation = r->addChild(glm::mat4x4());
+  else
+    throw std::runtime_error("sprite::constructor failed rotation lock");
 
   // this has to be done here, as a nasty hack, because the rotation won't work correctly
   //(m_width and m_height are set in setScale)
@@ -33,20 +39,20 @@ Sprite::Sprite(std::shared_ptr<Texture> texture, std::weak_ptr<SceneGraph> paren
   setScale(glm::vec3(m_width, m_height, 0.0f));
 }
 
-Sprite::Sprite(std::shared_ptr<Texture> texture, std::weak_ptr<Sprite> parent)
+Sprite::Sprite(std::shared_ptr<Texture> texture, std::shared_ptr<Sprite> parent)
     : m_parent(parent) {
-
-  if (auto p = parent.lock())
-    Sprite(texture, p->getGraph());
-  else
-    Sprite(texture, std::weak_ptr<Sprite>());
+  if (parent)
+    Sprite(texture, parent->getGraph());
 }
 
 void Sprite::setPosition(glm::ivec3 pos) {
   m_x = pos[0];
   m_y = pos[1];
   m_layer = pos[2];
-  translation->changeMatrix(glm::translate(pos));
+  if (auto t = translation.lock())
+    t->changeMatrix(glm::translate(pos));
+  else
+    throw std::runtime_error("Sprite::setPosition translation lock failed");
 }
 
 void Sprite::setPosition(int x, int y) { setPosition(glm::vec3(x, y, m_layer)); }
@@ -58,29 +64,35 @@ void Sprite::setRotation(GLfloat rot) {
   m = m * glm::rotate(rot, glm::vec3(0.0f, 0.0f, 1.0f));
   m = glm::translate(m, glm::vec3(m_width * -0.5f, m_height * -0.5f, 0.0f));
 
-  rotation->changeMatrix(m);
+  if (auto r = rotation.lock())
+    r->changeMatrix(m);
+  else
+    throw std::runtime_error("Sprite::setRotation rotation lock failed");
 }
 
 void Sprite::setScale(glm::ivec3 scale) {
   m_width = scale[0];
   m_height = scale[1];
-  scalation->changeMatrix(glm::scale(scale));
+  if (auto s = scalation.lock())
+    s->changeMatrix(glm::scale(scale));
+  else
+    throw std::runtime_error("Sprite::setScale scalation lock failed");
 }
 
 void Sprite::setScale(unsigned int w, unsigned int h) { setScale(glm::ivec3(w, h, 1.0f)); }
 
-void Sprite::setParent(std::weak_ptr<Sprite> parent) { m_parent = parent; }
+void Sprite::setParent(std::shared_ptr<Sprite> parent) { m_parent = parent; }
 
 glm::ivec2 Sprite::getRelativePosition(glm::ivec2 absolute) {
-  if (auto p = m_parent.lock())
-    return p->getRelativePosition(absolute - getPosition());
+  if (m_parent)
+    return m_parent->getRelativePosition(absolute - getPosition());
 
   return absolute - getPosition();
 }
 
 glm::ivec2 Sprite::getAbsolutePosition(glm::ivec2 relative) {
-  if (auto p = m_parent.lock())
-    return p->getRelativePosition(relative + getPosition());
+  if (m_parent)
+    return m_parent->getRelativePosition(relative + getPosition());
 
   return relative + getPosition();
 }
@@ -100,14 +112,14 @@ glm::ivec2 Sprite::getPosition() { return glm::ivec2(m_x, m_y); }
 std::weak_ptr<SceneGraph> Sprite::getGraph() { return rotation; }
 
 glm::mat4x4 Sprite::getMatrix() {
-  if (scalation)
-    return scalation->getMatrix();
+  if (auto s = scalation.lock())
+    return s->getMatrix();
 
   return glm::mat4x4();
 }
 
 SpriteRenderer::SpriteRenderer() {
-  m_rootnode = std::make_shared<SceneGraph>(std::weak_ptr<SceneGraph>(), glm::ortho(0.0f, (float)m_width, 0.0f, (float)m_height, -1000.0f, 1.0f));
+  m_rootnode = std::make_shared<SceneGraph>(glm::ortho(0.0f, (float)m_width, 0.0f, (float)m_height, -1000.0f, 1.0f));
 
   // vertices (also directly used as tex coords)
   GLfloat vertices[] = {0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f};

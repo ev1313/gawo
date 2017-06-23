@@ -20,7 +20,7 @@
       - this induces "recalculate", which recalculates all matrices of the children
 
  */
-class SceneGraph {
+class SceneGraph : public std::enable_shared_from_this<SceneGraph> {
 private:
   std::weak_ptr<SceneGraph> m_parent;
   std::vector<std::shared_ptr<SceneGraph>> m_children;
@@ -29,10 +29,12 @@ private:
   glm::mat4x4 m_matrix;
 
 public:
+  SceneGraph(glm::mat4x4 operator_matrix);
   SceneGraph(std::weak_ptr<SceneGraph> parent, glm::mat4x4 operator_matrix);
 
-  void addChild(std::shared_ptr<SceneGraph> child);
-  void removeChild(std::shared_ptr<SceneGraph> child);
+  std::weak_ptr<SceneGraph> addChild(glm::mat4x4 operator_matrix);
+  // void removeChild(std::shared_ptr<SceneGraph> child);
+  void setParent(std::weak_ptr<SceneGraph> parent);
   /*
     updates the operator matrix and recalculates the graph.
    */

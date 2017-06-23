@@ -9,9 +9,9 @@
 
 class CameraRenderer : public SpriteRenderer {
 private:
-  std::shared_ptr<SceneGraph> translation;
-  std::shared_ptr<SceneGraph> rotation;
-  std::shared_ptr<SceneGraph> scalation;
+  std::weak_ptr<SceneGraph> translation;
+  std::weak_ptr<SceneGraph> rotation;
+  std::weak_ptr<SceneGraph> scalation;
 
   // position, rotation & zoom
   int m_x = 0.0f;

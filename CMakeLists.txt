@@ -5,6 +5,8 @@ set(INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
 
+add_subdirectory(sdlwrapper)
+
 find_package(GLM REQUIRED)
 
 function(setup_target NAME)
@@ -36,3 +38,5 @@ target_link_libraries(${PROJECT_NAME} sdlwrapper)
 target_link_libraries(${PROJECT_NAME} "atomic")
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDE_DIRS})
+
+add_subdirectory(tests)
