@@ -53,11 +53,15 @@ TEST_CASE("gawo/scenegraph/", "general tests") {
     REQUIRE(sc_abcd.lock()->getMatrix() == a * b * c * d);
   }
 
+  auto e = glm::translate(glm::mat4x4(), glm::vec3(43123.0f, 2222.0f, 44.0f));
+  a = glm::translate(glm::mat4x4(), glm::vec3(43.0f, 234.0f, 44.0f));
+
   auto sc_ac = sc_a->addChild(c);
   auto sc_acb = sc_ac.lock()->addChild(b);
   auto sc_acbd = sc_acb.lock()->addChild(d);
-  auto sc_aca = sc_ac.lock()->addChild(a);
+  auto sc_ace = sc_ac.lock()->addChild(e);
 
+  sc_a->changeMatrix(a);
   SECTION("multiple children") {
     REQUIRE(sc_a->getMatrix() == a);
     REQUIRE(sc_ab.lock()->getMatrix() == a * b);
@@ -67,6 +71,6 @@ TEST_CASE("gawo/scenegraph/", "general tests") {
     REQUIRE(sc_ac.lock()->getMatrix() == a * c);
     REQUIRE(sc_acb.lock()->getMatrix() == a * c * b);
     REQUIRE(sc_acbd.lock()->getMatrix() == a * c * b * d);
-    REQUIRE(sc_aca.lock()->getMatrix() == a * c * a);
+    REQUIRE(sc_ace.lock()->getMatrix() == a * c * e);
   }
 }
