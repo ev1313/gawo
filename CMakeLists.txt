@@ -7,6 +7,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
 
 add_subdirectory(sdlwrapper)
 
+find_package(epoxy REQUIRED)
 find_package(GLM REQUIRED)
 
 function(setup_target NAME)
