@@ -11,7 +11,7 @@ find_package(epoxy REQUIRED)
 find_package(GLM REQUIRED)
 
 function(setup_target NAME)
-  set_property(TARGET ${NAME} PROPERTY CXX_STANDARD 14)
+  set_property(TARGET ${NAME} PROPERTY CXX_STANDARD 11)
   set_property(TARGET ${NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
   target_compile_options(${NAME} PRIVATE -Wall -Wextra)
   target_compile_options(${NAME} PRIVATE $<$<CONFIG:DEBUG>:-ggdb -O2>)
