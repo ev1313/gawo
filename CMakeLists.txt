@@ -35,6 +35,7 @@ set(ENGINE_INC
 add_library(${PROJECT_NAME} STATIC ${ENGINE_INC} ${ENGINE_SRC})
 setup_target(${PROJECT_NAME})
 
+target_link_libraries(${PROJECT_NAME} ${EPOXY_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} sdlwrapper)
 target_link_libraries(${PROJECT_NAME} "atomic")
 
