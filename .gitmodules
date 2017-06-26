@@ -4,3 +4,6 @@
 [submodule "sig11"]
 	path = sig11
 	url = https://github.com/ev1313/sig11
+[submodule "cmake-modiwlau"]
+	path = cmake-modiwlau
+	url = https://git.j3d1.de/end/cmake-modiwlau
