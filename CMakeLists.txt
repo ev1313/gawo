@@ -5,13 +5,19 @@ set(INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
 
+option(CXX_VERSION "C++ Version" 14)
+option(BUILD_TESTS "build tests" OFF)
+option(USE_X11 "use x11" OFF)
+option(USE_SDL "use sdl" ON)
+
 add_subdirectory(sdlwrapper)
+add_subdirectory(sig11)
 
 find_package(epoxy REQUIRED)
 find_package(GLM REQUIRED)
 
 function(setup_target NAME)
-  set_property(TARGET ${NAME} PROPERTY CXX_STANDARD 11)
+  set_property(TARGET ${NAME} PROPERTY CXX_STANDARD CXX_VERSION)
   set_property(TARGET ${NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
   target_compile_options(${NAME} PRIVATE -Wall -Wextra)
   target_compile_options(${NAME} PRIVATE $<$<CONFIG:DEBUG>:-ggdb -O2>)
@@ -41,4 +47,6 @@ target_link_libraries(${PROJECT_NAME} "atomic")
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDE_DIRS})
 
-add_subdirectory(tests)
+IF(BUILD_TESTS)
+  add_subdirectory(tests)
+ENDIF(BUILD_TESTS)

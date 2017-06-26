@@ -1,6 +1,6 @@
-[submodule "sdlwrapper"]
-	path = sdlwrapper
-	url = http://git.j3d1.de/end/sdlwrapper.git
 [submodule "Catch"]
 	path = tests/Catch
 	url = https://github.com/philsquared/Catch
+[submodule "sig11"]
+	path = sig11
+	url = https://github.com/ev1313/sig11
