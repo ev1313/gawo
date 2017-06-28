@@ -1,19 +1,23 @@
 #include "sdlwrapper/sdlwindow.hpp"
 
-sdl2::SDLWindow::SDLWindow()
+namespace sdl2 {
+SDLWindow::SDLWindow()
     : m_width(640)
     , m_height(400) {
-  SDL_Log("initializing window");
+  SDL_Log("initializing sdl");
 
   if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
     SDL_Log("Unable to initialize SDL: %s\n", SDL_GetError());
     throw std::runtime_error(SDL_GetError());
   }
+}
 
+void SDLWindow::open() {
+  SDL_Log("opening window");
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-  m_window = sdl2::WindowPtr(SDL_CreateWindow("OpenGL Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_width, m_height,
-                                              SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED));
+  m_window = WindowPtr(SDL_CreateWindow("OpenGL Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_width, m_height,
+                                        SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_MAXIMIZED));
   if (m_window == NULL) {
     SDL_Log("failed initializing the window.");
     throw std::runtime_error(SDL_GetError());
@@ -38,7 +42,7 @@ sdl2::SDLWindow::SDLWindow()
   m_initializedgl = true;
 }
 
-sdl2::SDLWindow::~SDLWindow() {
+SDLWindow::~SDLWindow() {
   SDL_Log("closing window");
 
   if (m_context != NULL)
@@ -49,13 +53,13 @@ sdl2::SDLWindow::~SDLWindow() {
   SDL_Quit();
 }
 
-void sdl2::SDLWindow::poll() {
+void SDLWindow::poll() {
   SDL_Event event;
   while (SDL_PollEvent(&event) != 0)
     handleEvent(event);
 }
 
-void sdl2::SDLWindow::handleEvent(SDL_Event event) {
+void SDLWindow::handleEvent(SDL_Event event) {
   // TODO
   // handle more events
   if (event.type == SDL_WINDOWEVENT) {
@@ -70,19 +74,20 @@ void sdl2::SDLWindow::handleEvent(SDL_Event event) {
   }
 }
 
-unsigned int sdl2::SDLWindow::getWidth() { return m_width; }
+unsigned int SDLWindow::getWidth() { return m_width; }
 
-unsigned int sdl2::SDLWindow::getHeight() { return m_height; }
+unsigned int SDLWindow::getHeight() { return m_height; }
 
-bool sdl2::SDLWindow::initializedGL() { return m_initializedgl; }
+bool SDLWindow::initializedGL() { return m_initializedgl; }
 
-void sdl2::SDLWindow::setTitle(std::string title) { SDL_SetWindowTitle(m_window.get(), title.c_str()); }
+void SDLWindow::setTitle(std::string title) { SDL_SetWindowTitle(m_window.get(), title.c_str()); }
 
-std::string sdl2::SDLWindow::getTitle() {
+std::string SDLWindow::getTitle() {
   const char* c = SDL_GetWindowTitle(m_window.get());
   std::string b;
   if (c != NULL)
     b = c;
 
   return b;
+}
 }

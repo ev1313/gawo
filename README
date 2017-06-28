@@ -3,6 +3,6 @@ gawo
 
 simple opengl framework including a spriterenderer.
 
-sdlwrapper provides a simple SDL window implementation, x11 a simple X11 Window implementation.
+sdlwrapper provides a simple SDL window implementation, x11wrapper a simple X11 Window implementation.
 
 AGPL3 licensed.

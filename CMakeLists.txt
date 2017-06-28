@@ -50,8 +50,12 @@ setup_cxx_library(TARGET_NAME ${PROJECT_NAME} STATIC ${ENGINE_INC} ${ENGINE_SRC}
 target_link_libraries(${PROJECT_NAME} sig11)
 target_link_libraries(${PROJECT_NAME} ${EPOXY_LIBRARIES})
 IF(USE_SDL)
+  target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
+  target_link_libraries(${PROJECT_NAME} ${SDL2_IMAGE_LIBRARIES})
+  target_link_libraries(${PROJECT_NAME} ${SDL2_TTF_LIBRARIES})
 ENDIF(USE_SDL)
 IF(USE_X11)
+  target_link_libraries(${PROJECT_NAME} x11)
 ENDIF(USE_X11)
 target_link_libraries(${PROJECT_NAME} "atomic")
 

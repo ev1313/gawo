@@ -11,6 +11,7 @@ class GLWindow {
 private:
 protected:
 public:
+  virtual void open() = 0;
   virtual void poll() = 0;
   virtual void swap() = 0;
   virtual void setTitle(std::string title) = 0;
