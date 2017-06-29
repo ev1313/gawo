@@ -7,3 +7,6 @@
 [submodule "cmake-modiwlau"]
 	path = cmake-modiwlau
 	url = https://git.j3d1.de/end/cmake-modiwlau
+[submodule "tests/glits"]
+	path = tests/glits
+	url = https://git.j3d1.de/end/glits
