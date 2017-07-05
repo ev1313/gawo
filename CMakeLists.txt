@@ -11,7 +11,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 option(CXX_VERSION_14 "C++ Version 14" ON)
-option(BUILD_TESTS "build tests" OFF)
+option(GAWO_BUILD_TESTS "build tests" OFF)
 option(USE_X11 "use x11" OFF)
 option(USE_SDL "use sdl" ON)
 
@@ -61,6 +61,6 @@ target_link_libraries(${PROJECT_NAME} "atomic")
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDE_DIRS})
 
-IF(BUILD_TESTS)
+IF(GAWO_BUILD_TESTS)
   add_subdirectory(tests)
-ENDIF(BUILD_TESTS)
+ENDIF(GAWO_BUILD_TESTS)
