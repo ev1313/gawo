@@ -59,6 +59,8 @@ void SDLWindow::poll() {
     handleEvent(event);
 }
 
+void SDLWindow::swap() { SDL_GL_SwapWindow(m_window.get()); }
+
 void SDLWindow::handleEvent(SDL_Event event) {
   // TODO
   // handle more events
@@ -78,6 +80,15 @@ unsigned int SDLWindow::getWidth() { return m_width; }
 
 unsigned int SDLWindow::getHeight() { return m_height; }
 
+void SDLWindow::setWidth(uint32_t w) {
+  m_width = w;
+  SDL_SetWindowSize(m_window.get(), w, m_height);
+}
+void SDLWindow::setHeight(uint32_t h) {
+  m_height = h;
+  SDL_SetWindowSize(m_window.get(), m_width, h);
+}
+
 bool SDLWindow::initializedGL() { return m_initializedgl; }
 
 void SDLWindow::setTitle(std::string title) { SDL_SetWindowTitle(m_window.get(), title.c_str()); }
@@ -87,6 +98,18 @@ std::string SDLWindow::getTitle() {
   std::string b;
   if (c != NULL)
     b = c;
+
+  return b;
+}
+
+uint8_t SDLWindow::getMouseButton() {
+  uint8_t b;
+
+  return b;
+}
+
+uint8_t SDLWindow::getMouseState() {
+  uint8_t b;
 
   return b;
 }

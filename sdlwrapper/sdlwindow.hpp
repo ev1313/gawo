@@ -35,7 +35,7 @@ protected:
 public:
   SDLWindow();
   ~SDLWindow();
-  //opening the window and initializing gl
+  // opening the window and initializing gl
   void open();
   /* eventloop */
   void poll();
@@ -46,7 +46,11 @@ public:
   uint32_t getWidth();
   uint32_t getHeight();
   bool initializedGL();
+  void setWidth(uint32_t w);
+  void setHeight(uint32_t h);
   void setTitle(std::string title);
   std::string getTitle();
+  uint8_t getMouseButton();
+  uint8_t getMouseState();
 };
 }

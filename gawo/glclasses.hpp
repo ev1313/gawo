@@ -60,8 +60,8 @@ public:
 
   void bind();
   void unbind();
-  void load(const std::string& data, GLenum shadertype);
-  void loadFile(const std::string& path, GLenum shadertype);
+  bool load(const std::string& data, GLenum shadertype);
+  bool loadFile(const std::string& path, GLenum shadertype);
   GLuint location(const std::string& name);
   GLuint program();
 };
@@ -95,12 +95,12 @@ public:
   void unbind();
   void attachRenderbuffer(GLenum attachment, GLuint rbo);
   void attachTexture(GLenum attachment, GLuint tex);
+  bool check();
 };
 
 class Renderbuffer {
 private:
   GLuint m_name;
-
 protected:
 public:
   Renderbuffer();
@@ -109,6 +109,21 @@ public:
   void bind();
   void unbind();
   void create(GLenum internalformat, GLsizei width, GLsizei height);
+  GLuint getName();
+};
+
+class RenderToTexture {
+private:
+  GLenum m_attachment;
+  Texture m_tex;
+  Framebuffer m_fbo;
+  Renderbuffer m_rbo;
+public:
+  RenderToTexture(GLenum attachment);
+  void init(GLint w, GLint h);
+  void bind();
+  void unbind();
+  GLuint getTexture();
 };
 
 /*

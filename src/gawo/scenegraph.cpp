@@ -2,9 +2,7 @@
 
 SceneGraph::SceneGraph(std::weak_ptr<SceneGraph> parent, glm::mat4x4 operator_matrix)
     : m_operator_matrix(operator_matrix) {
-  m_parent = parent;
-
-  recalculate();
+  setParent(parent);
 }
 
 SceneGraph::SceneGraph(glm::mat4x4 operator_matrix)

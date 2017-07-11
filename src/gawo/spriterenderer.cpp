@@ -2,13 +2,13 @@
 
 // static paths for the shaders
 // todo: load from config file in the data dir or so?
-static const char* vss_normal = "../data/shaders/sprite.vs";
+static const char* vss_normal = "../shaders/sprite.vs";
 
-static const char* fss_normal = "../data/shaders/sprite.fs";
+static const char* fss_normal = "../shaders/sprite.fs";
 
-static const char* vss_colorpicking = "../data/shaders/colorpicking.vs";
+static const char* vss_colorpicking = "../shaders/colorpicking.vs";
 
-static const char* fss_colorpicking = "../data/shaders/colorpicking.fs";
+static const char* fss_colorpicking = "../shaders/colorpicking.fs";
 
 Sprite::Sprite() {}
 
@@ -83,6 +83,16 @@ void Sprite::setScale(unsigned int w, unsigned int h) { setScale(glm::ivec3(w, h
 
 void Sprite::setParent(std::shared_ptr<Sprite> parent) { m_parent = parent; }
 
+void Sprite::setWidth(int w) { setScale(w, m_height); }
+
+void Sprite::setHeight(int h) { setScale(m_width, h); }
+
+void Sprite::setX(int x) { setPosition(x, m_y); }
+
+void Sprite::setY(int y) { setPosition(m_x, y); }
+
+void Sprite::setLayer(int layer) { setPosition(m_x, m_y, layer); }
+
 glm::ivec2 Sprite::getRelativePosition(glm::ivec2 absolute) {
   if (m_parent)
     return m_parent->getRelativePosition(absolute - getPosition());
@@ -118,8 +128,14 @@ glm::mat4x4 Sprite::getMatrix() {
   return glm::mat4x4();
 }
 
-SpriteRenderer::SpriteRenderer() {
+SpriteRenderer::SpriteRenderer(std::string normal_vs, std::string normal_fs, std::string color_vs, std::string color_fs) {
+  SDL_Log("initializing renderer");
+
   m_rootnode = std::make_shared<SceneGraph>(glm::ortho(0.0f, (float)m_width, 0.0f, (float)m_height, -1000.0f, 1.0f));
+
+  if (!m_rootnode) {
+    SDL_Log("couldn't initialize scenegraph rootnode");
+  }
 
   // vertices (also directly used as tex coords)
   GLfloat vertices[] = {0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f};
@@ -137,17 +153,20 @@ SpriteRenderer::SpriteRenderer() {
 
   // todo check if shader location are there, else warn || error
   m_normal_shader.init();
-  m_normal_shader.loadFile(vss_normal, GL_VERTEX_SHADER);
-  m_normal_shader.loadFile(fss_normal, GL_FRAGMENT_SHADER);
+  m_normal_shader.loadFile(normal_vs, GL_VERTEX_SHADER);
+  m_normal_shader.loadFile(normal_fs, GL_FRAGMENT_SHADER);
   m_normal_shader_mvp = m_normal_shader.location("mvp");
   m_normal_shader_tex = m_normal_shader.location("tex");
 
   m_colorpicking_shader.init();
-  m_colorpicking_shader.loadFile(vss_colorpicking, GL_VERTEX_SHADER);
-  m_colorpicking_shader.loadFile(fss_colorpicking, GL_FRAGMENT_SHADER);
+  m_colorpicking_shader.loadFile(color_vs, GL_VERTEX_SHADER);
+  m_colorpicking_shader.loadFile(color_fs, GL_FRAGMENT_SHADER);
   m_colorpicking_shader_mvp = m_colorpicking_shader.location("mvp");
   m_colorpicking_shader_color = m_colorpicking_shader.location("color");
 }
+
+SpriteRenderer::SpriteRenderer()
+    : SpriteRenderer(vss_normal, fss_normal, vss_colorpicking, fss_colorpicking) {}
 
 std::shared_ptr<Texture> SpriteRenderer::loadTexture(sdl2::SurfacePtr surface) {
   auto tex = std::make_shared<Texture>();

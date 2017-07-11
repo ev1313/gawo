@@ -11,7 +11,9 @@
 #include <gawo/scenegraph.hpp>
 #include <sdlwrapper/sdlwrapper.hpp>
 
-// data of the sprite itself
+/*
+  this struct represents a single sprite which can be rendered with the sprite renderer.
+ */
 struct Sprite {
 private:
   unsigned int m_width = 0;
@@ -37,6 +39,12 @@ public:
   void setScale(glm::ivec3 scale);
   void setScale(unsigned int w, unsigned int h);
   void setParent(std::shared_ptr<Sprite> parent);
+
+  void setWidth(int w);
+  void setHeight(int h);
+  void setX(int x);
+  void setY(int y);
+  void setLayer(int z);
 
   unsigned int getWidth();
   unsigned int getHeight();
@@ -105,6 +113,8 @@ protected:
 
 public:
   SpriteRenderer();
+  SpriteRenderer(std::string normal_vs, std::string normal_fs, std::string color_vs, std::string color_fs);
+  ~SpriteRenderer() { SDL_Log("closing renderer"); }
 
   std::shared_ptr<Texture> loadTexture(std::string path);
   std::shared_ptr<Texture> loadFont(std::string text);

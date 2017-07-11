@@ -33,7 +33,6 @@ bool Shader::check() {
     std::string str(error);
     std::cout << str << std::endl;
   }
-  // std::cout << "checked program" << std::endl;
 
   return (bool)result;
 }
@@ -52,18 +51,12 @@ bool Shader::checkShader(GLuint shader) {
     std::cout << str << std::endl;
   }
 
-  // std::cout << "checked shader" << std::endl;
-
   return result != GL_FALSE;
 }
 
 void Shader::bind() {
   if (m_program == 0) {
-    std::cerr << "error: invalid to bind invalid program (0)! "
-                 "use unbind() if that was your purpose!"
-              << std::endl;
-
-    exit(-1);
+    std::cerr << "error: invalid to bind invalid program (0)! " << std::endl;
     return;
   }
 
@@ -73,11 +66,10 @@ void Shader::bind() {
 GLuint Shader::program() { return m_program; }
 void Shader::unbind() { glUseProgram(0); }
 
-void Shader::load(const std::string& data, GLenum shadertype) {
+bool Shader::load(const std::string& data, GLenum shadertype) {
   if (m_program == 0) {
     std::cout << "[shader] error: shader program is invalid (0)!" << std::endl;
-    exit(-1);
-    return;
+    return false;
   }
 
   GLuint shader = glCreateShader(shadertype);
@@ -92,15 +84,17 @@ void Shader::load(const std::string& data, GLenum shadertype) {
   check();
 
   glDeleteShader(shader);
+
+  return true;
 }
 
-void Shader::loadFile(const std::string& path, GLenum shadertype) {
+bool Shader::loadFile(const std::string& path, GLenum shadertype) {
   std::string content;
   std::ifstream fileStream(path, std::ios::in);
 
   if (!fileStream.is_open()) {
     std::cerr << "Could not read file " << path << ". File does not exist." << std::endl;
-    return;
+    return false;
   }
 
   std::string line = "";
@@ -111,6 +105,8 @@ void Shader::loadFile(const std::string& path, GLenum shadertype) {
 
   fileStream.close();
   load(content, shadertype);
+  std::cout << "successfully loaded shader " << path << std::endl;
+  return true;
 }
 
 GLuint Shader::location(const std::string& name) { return glGetUniformLocation(m_program, name.c_str()); }
@@ -156,6 +152,10 @@ void Framebuffer::attachTexture(GLenum attachment, GLuint tex) {
   glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, tex, 0);
 }
 
+bool Framebuffer::check() {
+  return glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
+}
+
 Renderbuffer::Renderbuffer() {}
 
 Renderbuffer::~Renderbuffer() { glDeleteRenderbuffers(1, &m_name); }
@@ -168,6 +168,35 @@ void Renderbuffer::unbind() { glBindRenderbuffer(GL_RENDERBUFFER, 0); }
 void Renderbuffer::create(GLenum internalformat, GLsizei width, GLsizei height) {
   bind();
   glRenderbufferStorage(GL_RENDERBUFFER, internalformat, width, height);
+}
+
+GLuint Renderbuffer::getName() { return m_name; }
+
+RenderToTexture::RenderToTexture(GLenum attachment) { m_attachment = attachment; }
+
+void RenderToTexture::init(GLint w, GLint h) {
+  m_tex.init();
+  m_tex.bind();
+  m_tex.fill(0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+  m_rbo.init();
+  m_rbo.bind();
+  m_rbo.create(GL_DEPTH_COMPONENT, w, h);
+  m_fbo.init();
+  m_fbo.bind();
+  m_fbo.attachTexture(m_attachment, m_tex.getName());
+  m_fbo.attachRenderbuffer(m_attachment, m_rbo.getName());
+}
+
+void RenderToTexture::bind() {
+  m_fbo.bind();
+}
+
+void RenderToTexture::unbind() {
+  m_fbo.unbind();
+}
+
+GLuint RenderToTexture::getTexture() {
+  return m_tex.getName();
 }
 
 void printGlError(GLenum err) {

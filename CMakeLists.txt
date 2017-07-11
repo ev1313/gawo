@@ -14,6 +14,14 @@ option(CXX_VERSION_14 "C++ Version 14" ON)
 option(GAWO_BUILD_TESTS "build tests" OFF)
 option(USE_X11 "use x11" OFF)
 option(USE_SDL "use sdl" ON)
+option(COPY_SHADERS "copy the shaders to the binary dir" ON)
+
+if(COPY_SHADERS)
+file(COPY shaders DESTINATION ${CMAKE_BINARY_DIR})
+endif(COPY_SHADERS)
+if(GAWO_BUILD_TESTS)
+  file(COPY tests/gawo-testdata DESTINATION ${CMAKE_BINARY_DIR})
+endif(GAWO_BUILD_TESTS)
 
 find_package(epoxy REQUIRED)
 find_package(GLM REQUIRED)
@@ -36,6 +44,9 @@ set(ENGINE_INC
   )
 
 IF(USE_SDL)
+  find_package(SDL2 REQUIRED)
+  find_package(SDL2Image REQUIRED)
+  find_package(SDL2TTF REQUIRED)
   add_definitions(-DUSE_SDL -DUSE_GAWO)
   set(ENGINE_SRC ${ENGINE_SRC} 
 	  src/sdlwrapper/sdlwindow.cpp)
