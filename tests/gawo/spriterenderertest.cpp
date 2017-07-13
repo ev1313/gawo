@@ -13,6 +13,8 @@
 #include "x11wrapper/x11window.hpp"
 #endif
 
+#include "gawo/glclasses.hpp"
+
 TEST_CASE("gawo/spriterenderer", "general tests") {
 
 #if (USE_SDL)
@@ -25,14 +27,17 @@ TEST_CASE("gawo/spriterenderer", "general tests") {
   SECTION("check renderer") {
     auto renderer = std::make_shared<SpriteRenderer>();
     REQUIRE(renderer->getGraph().lock());
-    glViewport(0, 0, 1532, 978);
-    renderer->resize(1532, 978);
+    glViewport(0, 0, 2048, 2048);
+    renderer->resize(2048, 2048);
     SECTION("empty screen") {
       glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
       glClear(GL_COLOR_BUFFER_BIT);
-      RenderToTexture rtt;
-      rtt.init();
-      REQUIRE(glits::check_framebuffer("../gawo-testdata/test-spriterenderer-empty.png", 0.01f, 0.01f, GAWO_GENERATE_TESTDATA));
+      RenderToTexture rtt(GL_COLOR_ATTACHMENT0);
+      rtt.init(2048, 2048);
+      
+      GLenum buf[1] = {GL_COLOR_ATTACHMENT0};
+      glDrawBuffers(1, buf);
+      REQUIRE(glits::check_texture("../gawo-testdata/test-spriterenderer-empty.png", rtt.getTexture(), 0.01f, 0.01f, GAWO_GENERATE_TESTDATA));
     }
 
     SECTION("load sprite texture") {

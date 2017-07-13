@@ -13,3 +13,5 @@ cscope.out
 cscope.files
 latex
 html
+.idea
+cmake-build-*

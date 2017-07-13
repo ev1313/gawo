@@ -128,7 +128,8 @@ void Texture::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
 
 void Texture::fill(GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid* data) {
   bind();
-  glTexImage2D(GL_TEXTURE_2D, level, internalFormat, width, height, border, format, type, data);
+  glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, 1024, 1024, 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
+  //glTexImage2D(GL_TEXTURE_2D, level, internalFormat, width, height, border, format, type, data);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
@@ -172,19 +173,20 @@ void Renderbuffer::create(GLenum internalformat, GLsizei width, GLsizei height) 
 
 GLuint Renderbuffer::getName() { return m_name; }
 
-RenderToTexture::RenderToTexture(GLenum attachment) { m_attachment = attachment; }
+RenderToTexture::RenderToTexture(GLenum attachment) {
+  m_tex = Texture();
+  m_attachment = attachment; }
 
 void RenderToTexture::init(GLint w, GLint h) {
   m_tex.init();
-  m_tex.bind();
-  m_tex.fill(0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+  m_tex.fill(0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
   m_rbo.init();
   m_rbo.bind();
   m_rbo.create(GL_DEPTH_COMPONENT, w, h);
   m_fbo.init();
   m_fbo.bind();
   m_fbo.attachTexture(m_attachment, m_tex.getName());
-  m_fbo.attachRenderbuffer(m_attachment, m_rbo.getName());
+  m_fbo.attachRenderbuffer(GL_DEPTH_ATTACHMENT, m_rbo.getName());
 }
 
 void RenderToTexture::bind() {
