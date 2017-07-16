@@ -9,7 +9,7 @@ void main()
 {
   gl_FragData[0] = texture2D(tex, vec2(outtexcoord.x, 1-outtexcoord.y));
 
-  if(gl_FragColor.a < 0.1f)
+  if(gl_FragData[0].a < 0.1f)
     discard;
 }
 

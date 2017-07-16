@@ -172,7 +172,8 @@ std::shared_ptr<Texture> SpriteRenderer::loadTexture(sdl2::SurfacePtr surface) {
   auto tex = std::make_shared<Texture>();
   tex->init();
   tex->bind();
-  tex->fill(0, 4, surface.get()->w, surface.get()->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface.get()->pixels);
+  //todo: implement better loader checking for alpha channel, etc.
+  tex->fill(0, 3, surface.get()->w, surface.get()->h, 0, GL_RGB, GL_UNSIGNED_BYTE, surface.get()->pixels);
   m_textures.push_back(tex);
 
   return tex;

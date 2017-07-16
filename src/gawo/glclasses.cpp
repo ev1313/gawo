@@ -28,7 +28,7 @@ bool Shader::check() {
 
   if (result == GL_FALSE) {
     std::cout << "getting error log:" << std::endl;
-    char* error = (char*)malloc((size_t) (len + 1));
+    char* error = (char*)malloc((size_t)(len + 1));
     glGetProgramInfoLog(m_program, len, NULL, error);
     std::string str(error);
     std::cout << str << std::endl;
@@ -45,7 +45,7 @@ bool Shader::checkShader(GLuint shader) {
 
   if (result == GL_FALSE) {
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &len);
-    char* error = (char*)malloc((size_t) (len + 1));
+    char* error = (char*)malloc((size_t)(len + 1));
     glGetShaderInfoLog(shader, len, NULL, error);
     std::string str(error, error + len);
     std::cout << str << std::endl;
@@ -128,8 +128,7 @@ void Texture::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
 
 void Texture::fill(GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid* data) {
   bind();
-  glTexImage2D(GL_TEXTURE_2D, 0,GL_RGB, 1024, 1024, 0,GL_RGB, GL_UNSIGNED_BYTE, 0);
-  //glTexImage2D(GL_TEXTURE_2D, level, internalFormat, width, height, border, format, type, data);
+  glTexImage2D(GL_TEXTURE_2D, level, internalFormat, width, height, border, format, type, data);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
@@ -153,9 +152,7 @@ void Framebuffer::attachTexture(GLenum attachment, GLuint tex) {
   glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, tex, 0);
 }
 
-bool Framebuffer::check() {
-  return glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
-}
+bool Framebuffer::check() { return glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE; }
 
 Renderbuffer::Renderbuffer() {}
 
@@ -175,7 +172,8 @@ GLuint Renderbuffer::getName() { return m_name; }
 
 RenderToTexture::RenderToTexture(GLenum attachment) {
   m_tex = Texture();
-  m_attachment = attachment; }
+  m_attachment = attachment;
+}
 
 void RenderToTexture::init(GLint w, GLint h) {
   m_tex.init();
@@ -189,17 +187,11 @@ void RenderToTexture::init(GLint w, GLint h) {
   m_fbo.attachTexture(m_attachment, m_tex.getName());
 }
 
-void RenderToTexture::bind() {
-  m_fbo.bind();
-}
+void RenderToTexture::bind() { m_fbo.bind(); }
 
-void RenderToTexture::unbind() {
-  m_fbo.unbind();
-}
+void RenderToTexture::unbind() { m_fbo.unbind(); }
 
-GLuint RenderToTexture::getTexture() {
-  return m_tex.getName();
-}
+GLuint RenderToTexture::getTexture() { return m_tex.getName(); }
 
 void printGlError(GLenum err) {
   if (err != GL_NO_ERROR) {
