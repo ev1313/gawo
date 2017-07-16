@@ -14,8 +14,8 @@ private:
   std::weak_ptr<SceneGraph> scalation;
 
   // position, rotation & zoom
-  int m_x = 0.0f;
-  int m_y = 0.0f;
+  int m_x = 0;
+  int m_y = 0;
   float m_r = 0.0f;
   float m_z = 1.0f;
 

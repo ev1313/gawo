@@ -28,7 +28,7 @@ bool Shader::check() {
 
   if (result == GL_FALSE) {
     std::cout << "getting error log:" << std::endl;
-    char* error = (char*)malloc(len + 1);
+    char* error = (char*)malloc((size_t) (len + 1));
     glGetProgramInfoLog(m_program, len, NULL, error);
     std::string str(error);
     std::cout << str << std::endl;
@@ -45,7 +45,7 @@ bool Shader::checkShader(GLuint shader) {
 
   if (result == GL_FALSE) {
     glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &len);
-    char* error = (char*)malloc(len + 1);
+    char* error = (char*)malloc((size_t) (len + 1));
     glGetShaderInfoLog(shader, len, NULL, error);
     std::string str(error, error + len);
     std::cout << str << std::endl;
@@ -109,7 +109,7 @@ bool Shader::loadFile(const std::string& path, GLenum shadertype) {
   return true;
 }
 
-GLuint Shader::location(const std::string& name) { return glGetUniformLocation(m_program, name.c_str()); }
+GLint Shader::location(const std::string& name) { return glGetUniformLocation(m_program, name.c_str()); }
 
 Texture::Texture() {}
 
@@ -185,8 +185,8 @@ void RenderToTexture::init(GLint w, GLint h) {
   m_rbo.create(GL_DEPTH_COMPONENT, w, h);
   m_fbo.init();
   m_fbo.bind();
-  m_fbo.attachTexture(m_attachment, m_tex.getName());
   m_fbo.attachRenderbuffer(GL_DEPTH_ATTACHMENT, m_rbo.getName());
+  m_fbo.attachTexture(m_attachment, m_tex.getName());
 }
 
 void RenderToTexture::bind() {
@@ -227,21 +227,15 @@ const char* stringFromGlError(GLenum err) {
   switch (err) {
   case GL_INVALID_ENUM:
     return "GL_INVALID_ENUM";
-    break;
   case GL_INVALID_VALUE:
     return "GL_INVALID_VALUE";
-    break;
   case GL_INVALID_OPERATION:
     return "GL_INVALID_OPERATION";
-    break;
   case GL_OUT_OF_MEMORY:
     return "GL_OUT_OF_MEMORY";
-    break;
   case GL_INVALID_FRAMEBUFFER_OPERATION:
     return "GL_INVALID_FRAMEBUFFER_OPERATION";
-    break;
   default:
     return "<unknown>";
-    break;
   }
 }

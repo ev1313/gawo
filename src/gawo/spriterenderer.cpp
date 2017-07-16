@@ -48,7 +48,7 @@ Sprite::Sprite(std::shared_ptr<Texture> texture, std::shared_ptr<Sprite> parent)
 void Sprite::setPosition(glm::ivec3 pos) {
   m_x = pos[0];
   m_y = pos[1];
-  m_layer = pos[2];
+  m_layer = (unsigned int) pos[2];
   if (auto t = translation.lock())
     t->changeMatrix(glm::translate(pos));
   else
@@ -71,8 +71,8 @@ void Sprite::setRotation(GLfloat rot) {
 }
 
 void Sprite::setScale(glm::ivec3 scale) {
-  m_width = scale[0];
-  m_height = scale[1];
+  m_width = (unsigned int) scale[0];
+  m_height = (unsigned int) scale[1];
   if (auto s = scalation.lock())
     s->changeMatrix(glm::scale(scale));
   else
@@ -83,15 +83,15 @@ void Sprite::setScale(unsigned int w, unsigned int h) { setScale(glm::ivec3(w, h
 
 void Sprite::setParent(std::shared_ptr<Sprite> parent) { m_parent = parent; }
 
-void Sprite::setWidth(int w) { setScale(w, m_height); }
+void Sprite::setWidth(int w) { setScale((unsigned int) w, m_height); }
 
-void Sprite::setHeight(int h) { setScale(m_width, h); }
+void Sprite::setHeight(int h) { setScale(m_width, (unsigned int) h); }
 
 void Sprite::setX(int x) { setPosition(x, m_y); }
 
 void Sprite::setY(int y) { setPosition(m_x, y); }
 
-void Sprite::setLayer(int layer) { setPosition(m_x, m_y, layer); }
+void Sprite::setLayer(int layer) { setPosition(m_x, m_y, (unsigned int) layer); }
 
 glm::ivec2 Sprite::getRelativePosition(glm::ivec2 absolute) {
   if (m_parent)
@@ -246,9 +246,9 @@ unsigned int SpriteRenderer::finishClick() {
 void SpriteRenderer::renderClick(Sprite& sprite, unsigned int i) {
   glUniformMatrix4fv(m_colorpicking_shader_mvp, 1, GL_FALSE, glm::value_ptr(sprite.getMatrix()));
 
-  unsigned char r = (i & 0x000000FF) >> 0;
-  unsigned char g = (i & 0x0000FF00) >> 8;
-  unsigned char b = (i & 0x00FF0000) >> 16;
+  unsigned char r = (unsigned char) ((i & 0x000000FF) >> 0);
+  unsigned char g = (unsigned char) ((i & 0x0000FF00) >> 8);
+  unsigned char b = (unsigned char) ((i & 0x00FF0000) >> 16);
 
   glUniform3f(m_colorpicking_shader_color, r / 255.0f, g / 255.0f, b / 255.0f);
 

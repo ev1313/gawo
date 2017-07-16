@@ -27,8 +27,8 @@ void CameraRenderer::rotate(float r) {
   m = m * glm::rotate(m_r, glm::vec3(0.0f, 0.0f, 1.0f));
   m = glm::translate(m, glm::vec3(m_width * -0.5f, m_height * -0.5f, 0.0f));
 
-  if (auto r = rotation.lock())
-    r->changeMatrix(m);
+  if (auto rl = rotation.lock())
+    rl->changeMatrix(m);
   else
     throw std::runtime_error("CameraRenderer::rotate rotation lock failed");
 }

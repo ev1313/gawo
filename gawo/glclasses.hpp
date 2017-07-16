@@ -62,7 +62,7 @@ public:
   void unbind();
   bool load(const std::string& data, GLenum shadertype);
   bool loadFile(const std::string& path, GLenum shadertype);
-  GLuint location(const std::string& name);
+  GLint location(const std::string& name);
   GLuint program();
 };
 

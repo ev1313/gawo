@@ -68,8 +68,8 @@ void SDLWindow::handleEvent(SDL_Event event) {
     if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
       SDL_Log("resized window");
       if (m_initializedgl) {
-        m_width = event.window.data1;
-        m_height = event.window.data2;
+        m_width = (uint32_t) event.window.data1;
+        m_height = (uint32_t) event.window.data2;
         onResize(m_width, m_height);
       }
     }

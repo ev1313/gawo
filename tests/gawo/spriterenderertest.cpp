@@ -4,16 +4,11 @@
 
 #include "glits/glits.hpp"
 
-#include <iostream>
-#include <memory>
-
 #if (USE_SDL)
 #include "sdlwrapper/sdlwindow.hpp"
 #else
 #include "x11wrapper/x11window.hpp"
 #endif
-
-#include "gawo/glclasses.hpp"
 
 TEST_CASE("gawo/spriterenderer", "general tests") {
 
@@ -29,20 +24,18 @@ TEST_CASE("gawo/spriterenderer", "general tests") {
     REQUIRE(renderer->getGraph().lock());
     glViewport(0, 0, 2048, 2048);
     renderer->resize(2048, 2048);
-    SECTION("empty screen") {
-      glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
-      glClear(GL_COLOR_BUFFER_BIT);
-      RenderToTexture rtt(GL_COLOR_ATTACHMENT0);
-      rtt.init(2048, 2048);
-      
-      GLenum buf[1] = {GL_COLOR_ATTACHMENT0};
-      glDrawBuffers(1, buf);
-      REQUIRE(glits::check_texture("../gawo-testdata/test-spriterenderer-empty.png", rtt.getTexture(), 0.01f, 0.01f, GAWO_GENERATE_TESTDATA));
-    }
+    RenderToTexture rtt(GL_COLOR_ATTACHMENT0);
+    rtt.init(2048, 2048);
 
-    SECTION("load sprite texture") {
+    SECTION("load sprite textures") {
       auto t1 = renderer->loadTexture("../gawo-testdata/sprite1.png");
       REQUIRE(t1);
+      REQUIRE(glits::check_texture("../gawo-testdata/sprite1.png", t1->getName(), 0.0f, 0.0f, false));
+  
+      auto t2 = renderer->loadTexture("../gawo-testdata/sprite2.png");
+      REQUIRE(t2);
+      REQUIRE(glits::check_texture("../gawo-testdata/sprite2.png", t2->getName(), 0.0f, 0.0f, false));
+      
       SECTION("create Sprite") {
         auto s1 = std::make_shared<Sprite>(t1, renderer->getGraph());
 
@@ -88,10 +81,14 @@ TEST_CASE("gawo/spriterenderer", "general tests") {
           renderer->initialize();
           renderer->render(*s1);
           renderer->finish();
-          REQUIRE(glits::check_framebuffer("../gawo-testdata/test-spriterenderer-single_sprite.png", 0.01f, 0.01f, GAWO_GENERATE_TESTDATA));
+  
+          GLenum buf[1] = {GL_COLOR_ATTACHMENT0};
+          glDrawBuffers(1, buf);
+          REQUIRE(glits::check_texture("../gawo-testdata/test-spriterenderer-single_sprite.png", rtt.getTexture(), 0.01f, 0.01f, GAWO_GENERATE_TESTDATA));
         }
+  
+        auto s2 = std::make_shared<Sprite>(t2, renderer->getGraph());
       }
-      // Sprite s2("../gawo-testdata/spriterenderer-sprite2.png", s1);
     }
   }
 }
