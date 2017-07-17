@@ -1,10 +1,13 @@
 add_subdirectory(glits)
 
 set(TEST_SRC
-  gawo/scenegraphtest.cpp
-  gawo/spriterenderertest.cpp
-  main.cpp
-  )
+        gawo/scenegraphtest.cpp
+        gawo/spriterenderertest.cpp
+        spp/eval.cpp
+        spp/fulltests.cpp
+        spp/parsing.cpp
+        main.cpp
+    )
 
 option(GAWO_GENERATE_TESTDATA "generate testdata" OFF)
 

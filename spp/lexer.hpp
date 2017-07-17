@@ -1,5 +1,4 @@
-#ifndef SPP_LEXER_H
-#define SPP_LEXER_H
+#pragma once
 
 #ifndef YY_DECL
 #define YY_DECL \
@@ -21,7 +20,7 @@ class ParserContext;
 }
 
 #include "spp/ast.hpp"
-#include "parser.hpp"
+#include "spp/parser.hpp"
 
 namespace spp {
 
@@ -42,5 +41,3 @@ public:
 };
 
 }
-
-#endif

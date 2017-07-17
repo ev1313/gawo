@@ -1,5 +1,4 @@
-#ifndef SPP_CONTEXT_H
-#define SPP_CONTEXT_H
+#pragma once
 
 #include <unordered_map>
 #include <set>
@@ -113,5 +112,3 @@ public:
 
 
 }
-
-#endif

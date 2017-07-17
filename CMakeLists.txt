@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake-modiwlau")
 include(LibSetTarget)
+include(LibFlexibleBison)
 
 set(INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/")
 set(CMAKE_INCLUDE_CURRENT_DIRS ON)
@@ -10,7 +11,6 @@ set(CMAKE_INCLUDE_CURRENT_DIRS ON)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-option(CXX_VERSION_14 "C++ Version 14" ON)
 option(GAWO_BUILD_TESTS "build tests" OFF)
 option(USE_X11 "use x11" OFF)
 option(USE_SDL "use sdl" ON)
@@ -43,6 +43,34 @@ set(ENGINE_INC
         gawo/spriterenderer.hpp
         )
 
+#generate parser and lexer for the shader preprocessor
+
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/spp)
+set(LEXER_INPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/spp/lexer.lpp)
+set(PARSER_INPUT ${CMAKE_CURRENT_SOURCE_DIR}/src/spp/parser.ypp)
+set(LEXER_SRC ${CMAKE_CURRENT_BINARY_DIR}/spp/lexer.cpp)
+set(PARSER_SRC ${CMAKE_CURRENT_BINARY_DIR}/spp/parser.cpp)
+set(PARSER_INC ${CMAKE_CURRENT_BINARY_DIR}/spp/parser.hpp)
+
+set(SPP_SRC
+        src/spp/ast.cpp
+        src/spp/context.cpp
+        src/spp/loader.cpp
+        ${LEXER_SRC}
+        ${PARSER_SRC}
+        )
+set(SPP_INC
+        spp/ast.hpp
+        spp/context.hpp
+        spp/lexer.hpp
+        spp/loader.hpp
+        spp/spp.hpp
+        ${PARSER_INC}
+        )
+
+generate_lexer(INPUT_FILE ${LEXER_INPUT} OUTPUT_SRC ${LEXER_SRC})
+generate_parser(INPUT_FILE ${PARSER_INPUT} OUTPUT_INC ${PARSER_INC} OUTPUT_SRC ${PARSER_SRC})
+
 IF(USE_SDL)
     find_package(SDL2 REQUIRED)
     find_package(SDL2Image REQUIRED)
@@ -57,7 +85,7 @@ ENDIF(USE_SDL)
 IF(USE_X11)
     add_definitions(-DUSE_X11 -DUSE_GAWO)
 ENDIF(USE_X11)
-setup_cxx_library(TARGET_NAME ${PROJECT_NAME} STATIC ${ENGINE_INC} ${ENGINE_SRC})
+setup_cxx_library(TARGET_NAME ${PROJECT_NAME} STATIC ${ENGINE_INC} ${ENGINE_SRC} ${SPP_INC} ${SPP_SRC})
 target_link_libraries(${PROJECT_NAME} sig11)
 target_link_libraries(${PROJECT_NAME} ${EPOXY_LIBRARIES})
 IF(USE_SDL)

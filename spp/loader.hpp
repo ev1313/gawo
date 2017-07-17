@@ -1,5 +1,4 @@
-#ifndef SPP_LOADER_H
-#define SPP_LOADER_H
+#pragma once
 
 #include <istream>
 #include <memory>
@@ -27,5 +26,3 @@ public:
 };
 
 }
-
-#endif

@@ -1,10 +1,9 @@
-#ifndef SPP_AST_H
-#define SPP_AST_H
+#pragma once
 
 #include <memory>
 #include <vector>
 
-#include "location.hh"
+#include "spp/location.hh"
 
 namespace spp {
 
@@ -310,5 +309,3 @@ public:
 };
 
 }
-
-#endif
