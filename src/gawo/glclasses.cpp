@@ -1,4 +1,7 @@
 #include <gawo/glclasses.hpp>
+#include <gawo/log.hpp>
+
+static io::Logger &logger = io::logging().get_logger("gawo.glclasses");
 
 VAO::VAO() {}
 VAO::~VAO() { glDeleteVertexArrays(1, &m_name); }
@@ -27,7 +30,7 @@ bool Shader::check() {
   glGetProgramiv(m_program, GL_INFO_LOG_LENGTH, &len);
 
   if (result == GL_FALSE) {
-    std::cout << "getting error log:" << std::endl;
+    logger.log(io::LOG_ERROR) << "getting error log:" << std::endl;
     char* error = (char*)malloc((size_t)(len + 1));
     glGetProgramInfoLog(m_program, len, NULL, error);
     std::string str(error);
@@ -56,7 +59,7 @@ bool Shader::checkShader(GLuint shader) {
 
 void Shader::bind() {
   if (m_program == 0) {
-    std::cerr << "error: invalid to bind invalid program (0)! " << std::endl;
+    logger.log(io::LOG_ERROR) << "error: invalid to bind invalid program (0)! " << std::endl;
     return;
   }
 
@@ -68,7 +71,7 @@ void Shader::unbind() { glUseProgram(0); }
 
 bool Shader::load(const std::string& data, GLenum shadertype) {
   if (m_program == 0) {
-    std::cout << "[shader] error: shader program is invalid (0)!" << std::endl;
+    logger.log(io::LOG_ERROR) << "[shader] error: shader program is invalid (0)!" << std::endl;
     return false;
   }
 
@@ -93,7 +96,7 @@ bool Shader::loadFile(const std::string& path, GLenum shadertype) {
   std::ifstream fileStream(path, std::ios::in);
 
   if (!fileStream.is_open()) {
-    std::cerr << "Could not read file " << path << ". File does not exist." << std::endl;
+    logger.log(io::LOG_ERROR) << "Could not read file " << path << ". File does not exist." << std::endl;
     return false;
   }
 
@@ -105,7 +108,7 @@ bool Shader::loadFile(const std::string& path, GLenum shadertype) {
 
   fileStream.close();
   load(content, shadertype);
-  std::cout << "successfully loaded shader " << path << std::endl;
+  logger.log(io::LOG_INFO) << "successfully loaded shader " << path << std::endl;
   return true;
 }
 
@@ -195,7 +198,7 @@ GLuint RenderToTexture::getTexture() { return m_tex.getName(); }
 
 void printGlError(GLenum err) {
   if (err != GL_NO_ERROR) {
-    std::cout << "opengl error is: " << stringFromGlError(err) << std::endl;
+    logger.log(io::LOG_ERROR) << "opengl error is: " << stringFromGlError(err) << std::endl;
   }
 }
 

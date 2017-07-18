@@ -25,6 +25,7 @@ endif(GAWO_BUILD_TESTS)
 
 find_package(epoxy REQUIRED)
 find_package(GLM REQUIRED)
+find_package(Threads REQUIRED)
 
 add_subdirectory(sig11)
 
@@ -33,6 +34,7 @@ set(ENGINE_SRC
         src/gawo/glclasses.cpp
         src/gawo/scenegraph.cpp
         src/gawo/spriterenderer.cpp
+        src/gawo/log.cpp
         )
 
 set(ENGINE_INC
@@ -41,6 +43,7 @@ set(ENGINE_INC
         gawo/glwindow.hpp
         gawo/scenegraph.hpp
         gawo/spriterenderer.hpp
+        gawo/log.hpp
         )
 
 #generate parser and lexer for the shader preprocessor
@@ -87,6 +90,8 @@ IF(USE_X11)
 ENDIF(USE_X11)
 setup_cxx_library(TARGET_NAME ${PROJECT_NAME} STATIC ${ENGINE_INC} ${ENGINE_SRC} ${SPP_INC} ${SPP_SRC})
 target_link_libraries(${PROJECT_NAME} sig11)
+#todo: windows?
+target_link_libraries(${PROJECT_NAME} pthread)
 target_link_libraries(${PROJECT_NAME} ${EPOXY_LIBRARIES})
 IF(USE_SDL)
     target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})

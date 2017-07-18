@@ -31,11 +31,11 @@ TEST_CASE("gawo/spriterenderer", "general tests") {
     SECTION("load sprite textures") {
       auto t1 = renderer->loadTexture("../gawo-testdata/sprite1.png");
       REQUIRE(t1);
-      //REQUIRE(glits::check_texture("../gawo-testdata/sprite1.png", t1->getName(), 0.0f, 0.0f, false));
+      REQUIRE(glits::check_texture("../gawo-testdata/sprite1.png", t1->getName(), 0.0f, 0.0f, false));
 
       auto t2 = renderer->loadTexture("../gawo-testdata/sprite2.png");
       REQUIRE(t2);
-      //REQUIRE(glits::check_texture("../gawo-testdata/sprite2.png", t2->getName(), 0.0f, 0.0f, false));
+      REQUIRE(glits::check_texture("../gawo-testdata/sprite2.png", t2->getName(), 0.0f, 0.0f, false));
 
       SECTION("create Sprite") {
         auto s1 = std::make_shared<Sprite>(t1, renderer->getGraph());

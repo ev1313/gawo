@@ -1,7 +1,9 @@
 #include <gawo/spriterenderer.hpp>
+#include <gawo/log.hpp>
+
+static io::Logger &logger = io::logging().get_logger("gawo.SpriteRenderer");
 
 // static paths for the shaders
-// todo: load from config file in the data dir or so?
 static const char* vss_normal = "../shaders/sprite.vs";
 
 static const char* fss_normal = "../shaders/sprite.fs";
@@ -129,12 +131,12 @@ glm::mat4x4 Sprite::getMatrix() {
 }
 
 SpriteRenderer::SpriteRenderer(std::string normal_vs, std::string normal_fs, std::string color_vs, std::string color_fs) {
-  SDL_Log("initializing renderer");
+  logger.log(io::LOG_INFO, "initializing renderer");
 
   m_rootnode = std::make_shared<SceneGraph>(glm::ortho(0.0f, (float)m_width, 0.0f, (float)m_height, -1000.0f, 1.0f));
 
   if (!m_rootnode) {
-    SDL_Log("couldn't initialize scenegraph rootnode");
+    logger.log(io::LOG_INFO, "couldn't initialize scenegraph rootnode");
   }
 
   // vertices (also directly used as tex coords)
@@ -168,6 +170,10 @@ SpriteRenderer::SpriteRenderer(std::string normal_vs, std::string normal_fs, std
 SpriteRenderer::SpriteRenderer()
     : SpriteRenderer(vss_normal, fss_normal, vss_colorpicking, fss_colorpicking) {}
 
+SpriteRenderer::~SpriteRenderer() {
+  logger.log(io::LOG_INFO, "closing renderer");
+}
+
 std::shared_ptr<Texture> SpriteRenderer::loadTexture(sdl2::SurfacePtr surface) {
   auto tex = std::make_shared<Texture>();
   tex->init();
@@ -182,11 +188,11 @@ std::shared_ptr<Texture> SpriteRenderer::loadTexture(sdl2::SurfacePtr surface) {
 std::shared_ptr<Texture> SpriteRenderer::loadFont(std::string text) {
   auto font = sdl2::FontPtr(TTF_OpenFont("../data/fonts/cmunti.ttf", 23));
   if (!font) {
-    SDL_LogError(SDL_LOG_CATEGORY_ERROR, "failed loading font ../data/fonts/cmunti.ttf");
+    logger.log(io::LOG_ERROR, "failed loading font ../data/fonts/cmunti.ttf");
   }
   auto surface = sdl2::SurfacePtr(TTF_RenderText_Blended(font.get(), text.c_str(), SDL_Color{0, 0, 0, 255}));
   if (!surface) {
-    SDL_Log("failed rendering font surface");
+    logger.log(io::LOG_ERROR, "failed rendering font surface");
     throw std::runtime_error(SDL_GetError());
   }
 
@@ -199,7 +205,7 @@ std::shared_ptr<Texture> SpriteRenderer::loadTexture(std::string path) {
     std::string error = "couldn't load image '" + path + "'.";
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "loading image failed", error.c_str(), NULL);
 
-    SDL_LogError(SDL_LOG_CATEGORY_ERROR, error.c_str());
+    logger.log(io::LOG_ERROR, error.c_str());
   }
 
   return loadTexture(std::move(surface));

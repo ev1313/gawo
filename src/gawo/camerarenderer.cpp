@@ -1,5 +1,7 @@
 #include <gawo/camerarenderer.hpp>
 
+static io::Logger &logger = io::logging().get_logger("gawo.CameraRenderer");
+
 CameraRenderer::CameraRenderer()
     : SpriteRenderer() {
   translation = m_rootnode->addChild(glm::mat4x4());
@@ -17,7 +19,7 @@ void CameraRenderer::move(int x, int y) {
   if (auto t = translation.lock())
     t->changeMatrix(glm::translate(glm::vec3(m_x, m_y, 0.0f)));
   else
-    SDL_Log("CameraRenderer::move error, translation lock");
+    throw std::runtime_error("CameraRenderer::move error, translation lock failed");
 }
 
 void CameraRenderer::rotate(float r) {
@@ -30,7 +32,7 @@ void CameraRenderer::rotate(float r) {
   if (auto rl = rotation.lock())
     rl->changeMatrix(m);
   else
-    throw std::runtime_error("CameraRenderer::rotate rotation lock failed");
+    throw std::runtime_error("CameraRenderer::rotate error, rotation lock failed");
 }
 
 void CameraRenderer::zoom(float z, glm::vec3 pos) {
@@ -46,7 +48,7 @@ void CameraRenderer::zoom(float z, glm::vec3 pos) {
   if (auto r = rotation.lock())
     r->changeMatrix(m);
   else
-    SDL_Log("CameraRenderer::zoom, zoom lock");
+    throw std::runtime_error("CameraRenderer::zoom error, zoom lock failed");
 }
 
 std::weak_ptr<SceneGraph> CameraRenderer::getGraph() { return scalation; }

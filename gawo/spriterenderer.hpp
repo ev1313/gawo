@@ -114,7 +114,7 @@ protected:
 public:
   SpriteRenderer();
   SpriteRenderer(std::string normal_vs, std::string normal_fs, std::string color_vs, std::string color_fs);
-  ~SpriteRenderer() { SDL_Log("closing renderer"); }
+  ~SpriteRenderer();
 
   std::shared_ptr<Texture> loadTexture(std::string path);
   std::shared_ptr<Texture> loadFont(std::string text);

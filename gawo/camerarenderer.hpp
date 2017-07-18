@@ -6,6 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/mat4x4.hpp>
+#include "gawo/log.hpp"
 
 class CameraRenderer : public SpriteRenderer {
 private:
