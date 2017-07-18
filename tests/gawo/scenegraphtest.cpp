@@ -1,6 +1,6 @@
 #include <catch.hpp>
 
-#include "gawo/scenegraph.hpp"
+#include "gawo/datastructures/scenegraph.hpp"
 
 #include <iostream>
 

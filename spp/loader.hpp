@@ -7,22 +7,20 @@
 
 namespace spp {
 
-class Loader
-{
+class Loader {
 public:
-    virtual ~Loader();
+  virtual ~Loader();
 
 public:
-    virtual std::unique_ptr<std::istream> open(const std::string &path) = 0;
-
+  virtual std::unique_ptr <std::istream> open(const std::string &path) = 0;
+  
 };
 
 
-class DefaultLoader: public Loader
-{
+class DefaultLoader : public Loader {
 public:
-    std::unique_ptr<std::istream> open(const std::string &path) override;
-
+  std::unique_ptr <std::istream> open(const std::string &path) override;
+  
 };
 
 }

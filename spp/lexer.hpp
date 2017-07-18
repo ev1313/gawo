@@ -24,20 +24,19 @@ class ParserContext;
 
 namespace spp {
 
-class Scanner: ::sppFlexLexer
-{
+class Scanner : ::sppFlexLexer {
 public:
-    Scanner(ParserContext &context,
-            std::istream *arg_yyin,
-            std::ostream *arg_yyout);
-
-    ~Scanner() override;
-
-    virtual Parser::token_type lex(
-            Parser::semantic_type *yylval,
-            Parser::location_type *yylloc);
-
-    void set_debug(bool debug);
+  Scanner(ParserContext &context,
+          std::istream *arg_yyin,
+          std::ostream *arg_yyout);
+  
+  ~Scanner() override;
+  
+  virtual Parser::token_type lex(
+    Parser::semantic_type *yylval,
+    Parser::location_type *yylloc);
+  
+  void set_debug(bool debug);
 };
 
 }

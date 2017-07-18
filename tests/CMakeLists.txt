@@ -7,15 +7,15 @@ set(TEST_SRC
         spp/fulltests.cpp
         spp/parsing.cpp
         main.cpp
-    )
+        )
 
 option(GAWO_GENERATE_TESTDATA "generate testdata" OFF)
 
-if(GAWO_GENERATE_TESTDATA)
-	add_definitions(-DGAWO_GENERATE_TESTDATA=1)
-else(GAWO_GENERATE_TESTDATA)
-	add_definitions(-DGAWO_GENERATE_TESTDATA=0)
-endif(GAWO_GENERATE_TESTDATA)
+if (GAWO_GENERATE_TESTDATA)
+    add_definitions(-DGAWO_GENERATE_TESTDATA=1)
+else (GAWO_GENERATE_TESTDATA)
+    add_definitions(-DGAWO_GENERATE_TESTDATA=0)
+endif (GAWO_GENERATE_TESTDATA)
 
 setup_cxx_executable(TARGET_NAME gawo-tests ${TEST_SRC})
 

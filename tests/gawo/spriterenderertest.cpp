@@ -1,6 +1,6 @@
 #include <catch.hpp>
 
-#include "gawo/spriterenderer.hpp"
+#include "gawo/gl/renderer/spriterenderer.hpp"
 
 #include "glits/glits.hpp"
 

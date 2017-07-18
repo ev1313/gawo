@@ -4,32 +4,37 @@
 
 #include <string>
 
-#include <fstream>
-#include <iostream>
-#include <sstream>
-#include <vector>
-
-template <GLenum T> class BufferObject {
+template<GLenum T>
+class BufferObject {
 private:
   GLuint m_name;
-  GLvoid* m_mappointer;
+  GLvoid *m_mappointer;
 
 protected:
 public:
   BufferObject();
+  
   ~BufferObject();
+  
   void init();
+  
   void bind();
+  
   void bind(GLuint index, GLintptr offset = 0, GLsizeiptr size = 0);
+  
   void unbind();
-  void fill(GLenum usage, GLsizei size = 0, GLvoid* data = NULL);
-  void subfill(GLintptr offset, GLsizei size, const GLvoid* data);
+  
+  void fill(GLenum usage, GLsizei size = 0, GLvoid *data = NULL);
+  
+  void subfill(GLintptr offset, GLsizei size, const GLvoid *data);
+  
   void map(GLenum access);
+  
   void unmap();
 };
 
-typedef BufferObject<GL_ARRAY_BUFFER> VBO;
-typedef BufferObject<GL_ELEMENT_ARRAY_BUFFER> IBO;
+typedef BufferObject <GL_ARRAY_BUFFER> VBO;
+typedef BufferObject <GL_ELEMENT_ARRAY_BUFFER> IBO;
 
 class VAO {
 private:
@@ -38,32 +43,17 @@ private:
 protected:
 public:
   VAO();
+  
   ~VAO();
+  
   void init();
+  
   void bind();
+  
   void unbind();
-  void fill(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride = 0, const GLvoid* pointer = NULL);
-};
-
-class Shader {
-private:
-  GLuint m_program;
-
-  bool check();
-  bool checkShader(GLuint shader);
-
-protected:
-public:
-  Shader();
-  ~Shader();
-  void init(); // call to init when opengl context exists
-
-  void bind();
-  void unbind();
-  bool load(const std::string& data, GLenum shadertype);
-  bool loadFile(const std::string& path, GLenum shadertype);
-  GLint location(const std::string& name);
-  GLuint program();
+  
+  void
+  fill(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride = 0, const GLvoid *pointer = NULL);
 };
 
 class Texture {
@@ -73,12 +63,20 @@ private:
 protected:
 public:
   Texture();
+  
   ~Texture();
+  
   void init();
+  
   void bind();
+  
   void activate(GLenum slot);
+  
   void unbind();
-  void fill(GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid* data);
+  
+  void fill(GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type,
+            const GLvoid *data);
+  
   GLuint getName();
 };
 
@@ -89,12 +87,19 @@ private:
 protected:
 public:
   Framebuffer();
+  
   ~Framebuffer();
+  
   void init();
+  
   void bind();
+  
   void unbind();
+  
   void attachRenderbuffer(GLenum attachment, GLuint rbo);
+  
   void attachTexture(GLenum attachment, GLuint tex);
+  
   bool check();
 };
 
@@ -104,11 +109,17 @@ private:
 protected:
 public:
   Renderbuffer();
+  
   ~Renderbuffer();
+  
   void init();
+  
   void bind();
+  
   void unbind();
+  
   void create(GLenum internalformat, GLsizei width, GLsizei height);
+  
   GLuint getName();
 };
 
@@ -120,9 +131,13 @@ private:
   Renderbuffer m_rbo;
 public:
   RenderToTexture(GLenum attachment);
+  
   void init(GLint w, GLint h);
+  
   void bind();
+  
   void unbind();
+  
   GLuint getTexture();
 };
 
@@ -148,9 +163,11 @@ TBufferObject(void, bind)(GLuint index, GLintptr offset, GLsizeiptr size) {
 
 TBufferObject(void, unbind)() { glBindBuffer(T, 0); }
 
-TBufferObject(void, fill)(GLenum usage, GLsizei size, GLvoid* data) { glBufferData(T, size, data, usage); }
+TBufferObject(void, fill)(GLenum usage, GLsizei size, GLvoid *data) { glBufferData(T, size, data, usage); }
 
-TBufferObject(void, subfill)(GLintptr offset, GLsizei size, const GLvoid* data) { glBufferSubData(T, offset, size, data); }
+TBufferObject(void, subfill)(GLintptr offset, GLsizei size, const GLvoid *data) {
+  glBufferSubData(T, offset, size, data);
+}
 
 TBufferObject(void, map)(GLenum access) {
   // todo
@@ -167,4 +184,4 @@ bool checkAndPrintGlError();
 
 void printGlError(GLenum err);
 
-const char* stringFromGlError(GLenum err);
+const char *stringFromGlError(GLenum err);
