@@ -61,7 +61,7 @@ TEST_CASE("Library/recursive_include_removes_include_and_adds_error") {
   CHECK_FALSE(prog->errors().empty());
   CHECK(prog->size() == 2);
   
-  EvaluationContext ctx(lib);
+  EvaluationContext ctx;
   std::ostringstream out;
   prog->evaluate(out, ctx);
   
@@ -73,7 +73,7 @@ TEST_CASE("Library/recursive_include_removes_include_and_adds_error") {
 
 TEST_CASE("EvaluationContext/reject_duplicate_defines") {
   Library lib;
-  EvaluationContext ctx(lib);
+  EvaluationContext ctx;
   
   ctx.define("FOO", "BAR");
   ctx.define("BAZ", "123");
@@ -92,7 +92,7 @@ TEST_CASE("EvaluationContext/inject_defines") {
   CHECK(prog->errors().empty());
   CHECK(prog->size() == 2);
   
-  EvaluationContext ctx(lib);
+  EvaluationContext ctx;
   
   ctx.define("FOO", "BAR");
   ctx.define1ull("BAZI", 123);
@@ -102,9 +102,9 @@ TEST_CASE("EvaluationContext/inject_defines") {
   prog->evaluate(out, ctx);
   
   std::string expected("#version 330 core\n"
-                         "#define FOO BAR\n"
-                         "#define BAZI 123\n"
                          "#define BAZD 1.00000000000000004e-10\n"
+                         "#define BAZI 123\n"
+                         "#define FOO BAR\n"
                          "foo\n");
   
   CHECK(out.str() == expected);

@@ -82,14 +82,7 @@ public:
 
 
 class EvaluationContext {
-
-public:
-  explicit EvaluationContext(Library &library);
-  
-  EvaluationContext(const EvaluationContext &ref) = default;
-
 private:
-  Library &m_library;
   std::map<std::string, std::string> m_defines;
 
 public:
@@ -108,7 +101,6 @@ public:
   inline const std::map <std::string, std::string> &defines() const {
     return m_defines;
   }
-  
 };
 
 

@@ -84,8 +84,8 @@ IF (USE_SDL)
     set(ENGINE_SRC ${ENGINE_SRC}
             src/gawo/gl/window/sdlwrapper/sdlwindow.cpp)
     set(ENGINE_INC ${ENGINE_INC}
-            sdlwrapper/sdlwrapper.hpp
-            sdlwrapper/sdlwindow.hpp)
+            gawo/gl/window/sdlwrapper/sdlwrapper.hpp
+            gawo/gl/window/sdlwrapper/sdlwindow.hpp)
 ENDIF (USE_SDL)
 IF (USE_X11)
     add_definitions(-DUSE_X11 -DUSE_GAWO)

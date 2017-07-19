@@ -6,6 +6,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <spp/spp.hpp>
 
 /*
  *
@@ -15,6 +16,9 @@
 class Shader {
 private:
   unsigned int m_program;
+ 
+  spp::Library m_lib;
+  spp::EvaluationContext m_evalctx;
   
   bool check();
   

@@ -6,7 +6,10 @@
 static io::Logger& logger = io::logging().get_logger("gawo.gl");
 
 Shader::Shader()
-  : m_program(0) {}
+  : m_program(0) {
+  
+  
+}
 
 Shader::~Shader() {}
 
@@ -92,7 +95,7 @@ bool Shader::loadFile(const std::string& path, GLenum shadertype) {
     
     spp::ParserContext ctx(data);
     spp::Library lib;
-    spp::EvaluationContext ectx(lib);
+    spp::EvaluationContext ectx;
     std::unique_ptr <spp::Program> prog(ctx.parse());
     
     std::ostringstream out;

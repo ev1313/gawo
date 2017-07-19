@@ -9,7 +9,7 @@
 
 #endif
 
-#include <sdlwrapper/sdlwrapper.hpp>
+#include <gawo/gl/window/sdlwrapper/sdlwrapper.hpp>
 
 namespace sdl2 {
 

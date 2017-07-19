@@ -5,7 +5,7 @@
 #include "glits/glits.hpp"
 
 #if (USE_SDL)
-#include "sdlwrapper/sdlwindow.hpp"
+#include "gawo/gl/window/sdlwrapper/sdlwindow.hpp"
 #else
 #include "x11wrapper/x11window.hpp"
 #endif

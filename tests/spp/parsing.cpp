@@ -194,7 +194,7 @@ TEST_CASE("parser/sourcecode") {
   
   ParserContext ctx(data);
   Library lib;
-  EvaluationContext ectx(lib);
+  EvaluationContext ectx;
   std::unique_ptr <Program> prog(ctx.parse());
   REQUIRE(prog);
   CHECK(prog->errors().empty());
@@ -214,7 +214,7 @@ TEST_CASE("parser/sourcecode/string_literals") {
   
   ParserContext ctx(data);
   Library lib;
-  EvaluationContext ectx(lib);
+  EvaluationContext ectx;
   std::unique_ptr <Program> prog(ctx.parse());
   REQUIRE(prog);
   CHECK(prog->errors().empty());
@@ -234,7 +234,7 @@ TEST_CASE("parser/sourcecode/c++_style_comments") {
   
   ParserContext ctx(data);
   Library lib;
-  EvaluationContext ectx(lib);
+  EvaluationContext ectx;
   std::unique_ptr <Program> prog(ctx.parse());
   REQUIRE(prog);
   CHECK(prog->errors().empty());
@@ -255,7 +255,7 @@ TEST_CASE("parser/sourcecode/c_style_comments") {
   
   ParserContext ctx(data);
   Library lib;
-  EvaluationContext ectx(lib);
+  EvaluationContext ectx;
   std::unique_ptr <Program> prog(ctx.parse());
   REQUIRE(prog);
   CHECK(prog->errors().empty());
@@ -274,7 +274,7 @@ TEST_CASE("parser/version_declaration/recover_missing") {
   
   ParserContext ctx(data);
   Library lib;
-  EvaluationContext ectx(lib);
+  EvaluationContext ectx;
   std::unique_ptr <Program> prog(ctx.parse());
   REQUIRE(prog);
   CHECK(!prog->errors().empty());

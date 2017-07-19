@@ -143,17 +143,11 @@ const Program* Library::load(const std::string& path) {
   return _load(path, 0);
 }
 
-EvaluationContext::EvaluationContext(Library& library)
-  :
-  m_library(library) {
-  
-}
-
 void EvaluationContext::define(const std::string& name, const std::string& rhs) {
   if(m_defines.count(name)) {
     throw std::invalid_argument("spp::EvaluationContext duplicate define " + name);
   }
-  m_defines.insert(name, rhs);
+  m_defines.insert(std::make_pair(name, rhs));
 }
 
 void EvaluationContext::define1ull(const std::string& name, const unsigned long long value) {

@@ -9,7 +9,7 @@
 
 #include <gawo/gl/wrapper/glclasses.hpp>
 #include <gawo/datastructures/scenegraph.hpp>
-#include <sdlwrapper/sdlwrapper.hpp>
+#include <gawo/gl/window/sdlwrapper/sdlwrapper.hpp>
 #include "gawo/gl/wrapper/shader.hpp"
 
 /*

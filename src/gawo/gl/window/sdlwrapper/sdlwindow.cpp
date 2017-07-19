@@ -1,5 +1,5 @@
 #include <gawo/io/log.hpp>
-#include "sdlwrapper/sdlwindow.hpp"
+#include "gawo/gl/window/sdlwrapper/sdlwindow.hpp"
 
 static io::Logger& logger = io::logging().get_logger("sdl2.SDLWindow");
 

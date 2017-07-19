@@ -94,7 +94,7 @@ std::unique_ptr <Section> VersionDeclaration::copy() const {
 void VersionDeclaration::evaluate(std::ostream& into, EvaluationContext& ctx) {
   into << "#version " << m_version << " " << m_profile << std::endl;
   for (auto& define: ctx.defines()) {
-    into << "#define " << std::get <0>(define) << " " << std::get <1>(define) << std::endl;
+    into << "#define " << define.first << " " << define.second << std::endl;
   }
 }
 
