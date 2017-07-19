@@ -23,7 +23,7 @@ bool Shader::check() {
     char *error = (char *) malloc((size_t) (len + 1));
     glGetProgramInfoLog(m_program, len, NULL, error);
     std::string str(error);
-    std::cout << str << std::endl;
+    logger.log(io::LOG_ERROR) << str << std::endl;
   }
   
   return (bool) result;
@@ -40,7 +40,7 @@ bool Shader::checkShader(GLuint shader) {
     char *error = (char *) malloc((size_t) (len + 1));
     glGetShaderInfoLog(shader, len, NULL, error);
     std::string str(error, error + len);
-    std::cout << str << std::endl;
+    logger.log(io::LOG_ERROR) << str << std::endl;
   }
   
   return result != GL_FALSE;
@@ -59,7 +59,7 @@ GLuint Shader::program() { return m_program; }
 
 void Shader::unbind() { glUseProgram(0); }
 
-bool Shader::load(const std::__cxx11::string &data, GLenum shadertype) {
+bool Shader::load(const std::string &data, GLenum shadertype) {
   if (m_program == 0) {
     logger.log(io::LOG_ERROR) << "[shader] error: shader program is invalid (0)!" << std::endl;
     return false;
@@ -81,7 +81,7 @@ bool Shader::load(const std::__cxx11::string &data, GLenum shadertype) {
   return true;
 }
 
-bool Shader::loadFile(const std::__cxx11::string &path, GLenum shadertype) {
+bool Shader::loadFile(const std::string &path, GLenum shadertype) {
   std::string content;
   std::ifstream fileStream(path, std::ios_base::in);
   
@@ -102,4 +102,4 @@ bool Shader::loadFile(const std::__cxx11::string &path, GLenum shadertype) {
   return true;
 }
 
-GLint Shader::location(const std::__cxx11::string &name) { return glGetUniformLocation(m_program, name.c_str()); }
+GLint Shader::location(const std::string &name) { return glGetUniformLocation(m_program, name.c_str()); }
