@@ -19,20 +19,20 @@ Parser}
 %locations
 
 %parse-param {
-spp::ParserContext &ctx
+spp::ParserContext& ctx
 }
 %parse-param {
-spp::Program &dest
+spp::Program& dest
 }
 %error-verbose
 
 %union {
-  std::string *sourcecode;
-  std::string *strlit;
+  std::string* sourcecode;
+  std::string* strlit;
   long int intlit;
-  Program *program;
-  VersionDeclaration *version;
-  IncludeDirective *include;
+  Program* program;
+  VersionDeclaration* version;
+  IncludeDirective* include;
 }
 
 %
@@ -199,7 +199,7 @@ type()
 
 %%
 
-void spp::Parser::error(const spp::Parser::location_type &l,
-                        const std::string &m) {
+void spp::Parser::error(const spp::Parser::location_type& l,
+                        const std::string& m) {
   dest.add_local_error(l, m);
 }

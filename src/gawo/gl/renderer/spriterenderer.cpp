@@ -1,16 +1,16 @@
 #include <gawo/gl/renderer/spriterenderer.hpp>
 #include <gawo/io/log.hpp>
 
-static io::Logger &logger = io::logging().get_logger("gawo.SpriteRenderer");
+static io::Logger& logger = io::logging().get_logger("gawo.SpriteRenderer");
 
 // static paths for the shaders
-static const char *vss_normal = "../shaders/sprite.vs";
+static const char* vss_normal = "../shaders/sprite.vs";
 
-static const char *fss_normal = "../shaders/sprite.fs";
+static const char* fss_normal = "../shaders/sprite.fs";
 
-static const char *vss_colorpicking = "../shaders/colorpicking.vs";
+static const char* vss_colorpicking = "../shaders/colorpicking.vs";
 
-static const char *fss_colorpicking = "../shaders/colorpicking.fs";
+static const char* fss_colorpicking = "../shaders/colorpicking.fs";
 
 Sprite::Sprite() {}
 
@@ -149,7 +149,7 @@ SpriteRenderer::SpriteRenderer(std::string normal_vs, std::string normal_fs, std
   
   m_vao.init();
   m_vao.bind();
-  m_vao.fill(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid *) 0);
+  m_vao.fill(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*) 0);
   
   m_vao.unbind();
   m_vbo.unbind();
@@ -251,7 +251,7 @@ unsigned int SpriteRenderer::finishClick() {
   return data;
 }
 
-void SpriteRenderer::renderClick(Sprite &sprite, unsigned int i) {
+void SpriteRenderer::renderClick(Sprite& sprite, unsigned int i) {
   glUniformMatrix4fv(m_colorpicking_shader_mvp, 1, GL_FALSE, glm::value_ptr(sprite.getMatrix()));
   
   unsigned char r = (unsigned char) ((i & 0x000000FF) >> 0);
@@ -273,7 +273,7 @@ void SpriteRenderer::initialize() {
   m_vao.bind();
 }
 
-void SpriteRenderer::render(Sprite &sprite) {
+void SpriteRenderer::render(Sprite& sprite) {
   glUniformMatrix4fv(m_normal_shader_mvp, 1, GL_FALSE, glm::value_ptr(sprite.getMatrix()));
   
   sprite.tex->activate(GL_TEXTURE0);

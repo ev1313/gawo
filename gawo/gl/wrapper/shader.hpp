@@ -7,6 +7,11 @@
 #include <sstream>
 #include <vector>
 
+/*
+ *
+ * shader wrapper with the ability of adding defines before compiling using the shader preprocessor.
+ *
+ * */
 class Shader {
 private:
   unsigned int m_program;
@@ -21,17 +26,23 @@ public:
   
   ~Shader();
   
-  void init(); // call to init when opengl context exists
+  void init();
   
   void bind();
   
   void unbind();
+ 
+  bool load(const std::string& data, unsigned int shadertype);
   
-  bool load(const std::__cxx11::string &data, unsigned int shadertype);
+  bool compileLink();
   
-  bool loadFile(const std::__cxx11::string &path, unsigned int shadertype);
+  bool loadCompileLink(const std::string& data, unsigned int shadertype);
   
-  int location(const std::__cxx11::string &name);
+  bool loadFile(const std::string& path, unsigned int shadertype);
+  
+  bool loadFileCompileLink(const std::string& path, unsigned int shadertype);
+  
+  int location(const std::string& name);
   
   unsigned int program();
 };

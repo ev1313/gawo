@@ -42,11 +42,11 @@ struct LogRecord {
 
 class LogPipe : public std::ostringstream {
 public:
-  LogPipe(LogLevel level, const Logger &dest);
+  LogPipe(LogLevel level, const Logger& dest);
 
 private:
   LogLevel m_level;
-  const Logger &m_dest;
+  const Logger& m_dest;
 
 public:
   void submit();
@@ -65,9 +65,9 @@ private:
   LogLevel m_level;
 
 public:
-  virtual void log_direct(const LogRecord &record) = 0;
+  virtual void log_direct(const LogRecord& record) = 0;
   
-  void log(const LogRecord &record);
+  void log(const LogRecord& record);
 
 public:
   inline LogLevel level() const {
@@ -85,14 +85,14 @@ public:
   LogTTYSink();
 
 public:
-  void log_direct(const LogRecord &record);
+  void log_direct(const LogRecord& record);
   
 };
 
 
 class LogAsynchronousSink : public LogSink {
 public:
-  LogAsynchronousSink(std::unique_ptr <LogSink> &&backend);
+  LogAsynchronousSink(std::unique_ptr <LogSink>&& backend);
   
   ~LogAsynchronousSink() override;
 
@@ -106,7 +106,7 @@ private:
   std::thread m_logger;
 
 public:
-  void log_direct(const LogRecord &record) override;
+  void log_direct(const LogRecord& record) override;
   
   void thread_impl();
 
@@ -128,38 +128,38 @@ class Logger;
 
 class Logger {
 protected:
-  Logger(RootLogger *root,
-         const std::string &fullpath,
-         const std::string &name);
+  Logger(RootLogger* root,
+         const std::string& fullpath,
+         const std::string& name);
 
 public:
-  Logger(const Logger &ref) = delete;
+  Logger(const Logger& ref) = delete;
   
-  Logger &operator=(const Logger &ref) = delete;
+  Logger& operator=(const Logger& ref) = delete;
   
-  Logger(Logger &&src) = delete;
+  Logger(Logger&& src) = delete;
   
-  Logger &operator=(Logger &&src) = delete;
+  Logger& operator=(Logger&& src) = delete;
 
 protected:
   const std::string m_fullpath;
   const std::string m_name;
   mutable std::mutex m_mutex;
-  RootLogger *const m_root;
+  RootLogger* const m_root;
   std::unordered_map <std::string, std::unique_ptr <Logger> > m_children;
   LogLevel m_level;
 
 protected:
-  virtual std::string get_child_fullpath(const std::string &childname) const;
+  virtual std::string get_child_fullpath(const std::string& childname) const;
 
 public:
-  void log(LogLevel level, const std::string &message) const;
+  void log(LogLevel level, const std::string& message) const;
   
-  void logf(LogLevel level, const char *format, ...) const;
+  void logf(LogLevel level, const char* format, ...) const;
   
-  LogPipe &log(LogLevel level) const;
+  LogPipe& log(LogLevel level) const;
   
-  Logger &get_child(const std::string &name);
+  Logger& get_child(const std::string& name);
 
 public:
   inline const std::string fullpath() const {
@@ -189,36 +189,36 @@ private:
   std::vector <std::unique_ptr <LogSink> > m_sinks;
 
 protected:
-  std::string get_child_fullpath(const std::string &childname) const override;
+  std::string get_child_fullpath(const std::string& childname) const override;
   
   void log_submit(LogTimestamp timestamp,
                   LogLevel level,
-                  const std::string &logger_path,
-                  const std::string &message) const;
+                  const std::string& logger_path,
+                  const std::string& message) const;
 
 public:
-  LogSink *attach_sink(std::unique_ptr <LogSink> &&src);
+  LogSink* attach_sink(std::unique_ptr <LogSink>&& src);
   
   template<typename T, typename... args_ts>
-  T *attach_sink(args_ts &&... args) {
-    T *obj = new T(std::forward <args_ts>(args)...);
+  T* attach_sink(args_ts&& ... args) {
+    T* obj = new T(std::forward <args_ts>(args)...);
     attach_sink(std::unique_ptr <LogSink>(obj));
     return obj;
   }
   
-  inline std::tuple <std::unique_lock <std::mutex>, std::vector <std::unique_ptr <LogSink> > &> sinks() {
-    return std::tuple <std::unique_lock <std::mutex>, std::vector <std::unique_ptr <LogSink> > &>(
+  inline std::tuple <std::unique_lock <std::mutex>, std::vector <std::unique_ptr <LogSink> >&> sinks() {
+    return std::tuple <std::unique_lock <std::mutex>, std::vector <std::unique_ptr <LogSink> >&>(
       std::unique_lock <std::mutex>(m_mutex),
       m_sinks);
   }
   
-  Logger &get_logger(const std::string &path);
+  Logger& get_logger(const std::string& path);
   
   friend class Logger;
 };
 
-RootLogger &logging();
+RootLogger& logging();
 
-std::ostream &submit(std::ostream &stream);
+std::ostream& submit(std::ostream& stream);
 
 }

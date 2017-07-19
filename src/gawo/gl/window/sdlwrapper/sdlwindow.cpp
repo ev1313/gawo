@@ -1,7 +1,7 @@
 #include <gawo/io/log.hpp>
 #include "sdlwrapper/sdlwindow.hpp"
 
-static io::Logger &logger = io::logging().get_logger("sdl2.SDLWindow");
+static io::Logger& logger = io::logging().get_logger("sdl2.SDLWindow");
 
 namespace sdl2 {
 SDLWindow::SDLWindow()
@@ -99,7 +99,7 @@ bool SDLWindow::initializedGL() { return m_initializedgl; }
 void SDLWindow::setTitle(std::string title) { SDL_SetWindowTitle(m_window.get(), title.c_str()); }
 
 std::string SDLWindow::getTitle() {
-  const char *c = SDL_GetWindowTitle(m_window.get());
+  const char* c = SDL_GetWindowTitle(m_window.get());
   std::string b;
   if (c != NULL)
     b = c;

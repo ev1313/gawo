@@ -8,7 +8,7 @@ template<GLenum T>
 class BufferObject {
 private:
   GLuint m_name;
-  GLvoid *m_mappointer;
+  GLvoid* m_mappointer;
 
 protected:
 public:
@@ -24,9 +24,9 @@ public:
   
   void unbind();
   
-  void fill(GLenum usage, GLsizei size = 0, GLvoid *data = NULL);
+  void fill(GLenum usage, GLsizei size = 0, GLvoid* data = NULL);
   
-  void subfill(GLintptr offset, GLsizei size, const GLvoid *data);
+  void subfill(GLintptr offset, GLsizei size, const GLvoid* data);
   
   void map(GLenum access);
   
@@ -53,7 +53,7 @@ public:
   void unbind();
   
   void
-  fill(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride = 0, const GLvoid *pointer = NULL);
+  fill(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride = 0, const GLvoid* pointer = NULL);
 };
 
 class Texture {
@@ -75,7 +75,7 @@ public:
   void unbind();
   
   void fill(GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type,
-            const GLvoid *data);
+            const GLvoid* data);
   
   GLuint getName();
 };
@@ -163,9 +163,9 @@ TBufferObject(void, bind)(GLuint index, GLintptr offset, GLsizeiptr size) {
 
 TBufferObject(void, unbind)() { glBindBuffer(T, 0); }
 
-TBufferObject(void, fill)(GLenum usage, GLsizei size, GLvoid *data) { glBufferData(T, size, data, usage); }
+TBufferObject(void, fill)(GLenum usage, GLsizei size, GLvoid* data) { glBufferData(T, size, data, usage); }
 
-TBufferObject(void, subfill)(GLintptr offset, GLsizei size, const GLvoid *data) {
+TBufferObject(void, subfill)(GLintptr offset, GLsizei size, const GLvoid* data) {
   glBufferSubData(T, offset, size, data);
 }
 
@@ -184,4 +184,4 @@ bool checkAndPrintGlError();
 
 void printGlError(GLenum err);
 
-const char *stringFromGlError(GLenum err);
+const char* stringFromGlError(GLenum err);

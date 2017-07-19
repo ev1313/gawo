@@ -4,7 +4,8 @@
 
 namespace spp {
 
-ParserContext::ParserContext(std::istream &in, const std::string &source_path) :
+ParserContext::ParserContext(std::istream& in, const std::string& source_path)
+  :
   m_in(in), m_source_path(source_path), m_scanner(*this, &m_in, nullptr), m_errors() {
   
 }
@@ -22,12 +23,14 @@ std::unique_ptr <Program> ParserContext::parse() {
   return prog;
 }
 
-Library::Library() :
+Library::Library()
+  :
   Library(std::make_unique <DefaultLoader>()) {
   
 }
 
-Library::Library(std::unique_ptr <Loader> &&loader) :
+Library::Library(std::unique_ptr <Loader>&& loader)
+  :
   m_max_include_depth(100), m_loader(std::move(loader)) {
   
 }
@@ -36,19 +39,19 @@ Library::~Library() {
 
 }
 
-void Library::resolve_includes(Program *in_program, unsigned int depth) {
+void Library::resolve_includes(Program* in_program, unsigned int depth) {
   for (auto iter = in_program->begin();
        iter != in_program->end();
        ++iter) {
-    IncludeDirective *include = dynamic_cast<IncludeDirective *>(&(*iter));
+    IncludeDirective* include = dynamic_cast<IncludeDirective*>(&(*iter));
     if (!include) {
       continue;
     }
     
-    const Program *included = nullptr;
+    const Program* included = nullptr;
     try {
       included = _load(include->path(), depth);
-    } catch (const std::runtime_error &err) {
+    } catch (const std::runtime_error& err) {
       // include failed, this can be e.g. due to too deep recursion
       in_program->add_local_error(
         include->loc(),
@@ -71,7 +74,7 @@ void Library::resolve_includes(Program *in_program, unsigned int depth) {
     }
     
     if (!included->errors().empty()) {
-      for (auto &error: included->errors()) {
+      for (auto& error: included->errors()) {
         in_program->add_error(error);
       }
       // include failed
@@ -98,7 +101,7 @@ void Library::resolve_includes(Program *in_program, unsigned int depth) {
   }
 }
 
-const Program *Library::_load(const std::string &path, unsigned int depth) {
+const Program* Library::_load(const std::string& path, unsigned int depth) {
   if (depth > m_max_include_depth) {
     throw std::runtime_error("maximum include depth exceeded");
   }
@@ -129,52 +132,52 @@ const Program *Library::_load(const std::string &path, unsigned int depth) {
   }
   
   
-  Program *result = program.get();
+  Program* result = program.get();
   resolve_includes(result, depth + 1);
   m_cache[path] = std::move(program);
   
   return result;
 }
 
-const Program *Library::load(const std::string &path) {
+const Program* Library::load(const std::string& path) {
   return _load(path, 0);
 }
 
-EvaluationContext::EvaluationContext(Library &library) :
+EvaluationContext::EvaluationContext(Library& library)
+  :
   m_library(library) {
   
 }
 
-void EvaluationContext::define(const std::string &name, const std::string &rhs) {
-  {
-    auto iter = m_define_names.find(name);
-    if (iter != m_define_names.end()) {
-      throw std::invalid_argument("duplicate define " + name);
-    }
+void EvaluationContext::define(const std::string& name, const std::string& rhs) {
+  if(m_defines.count(name)) {
+    throw std::invalid_argument("spp::EvaluationContext duplicate define " + name);
   }
-  
-  m_define_names.insert(name);
-  m_defines.emplace_back(name, rhs);
+  m_defines.insert(name, rhs);
 }
 
-void EvaluationContext::define1ull(const std::string &name, const unsigned long long value) {
+void EvaluationContext::define1ull(const std::string& name, const unsigned long long value) {
   define(name, std::to_string(value));
 }
 
-void EvaluationContext::define1ll(const std::string &name, const signed long long value) {
+void EvaluationContext::define1ll(const std::string& name, const signed long long value) {
   define(name, std::to_string(value));
 }
 
-void EvaluationContext::define1f(const std::string &name, const float value) {
+void EvaluationContext::define1f(const std::string& name, const float value) {
   std::ostringstream tmp;
   tmp << std::setprecision(10) << value;
   define(name, tmp.str());
 }
 
-void EvaluationContext::define1d(const std::string &name, const double value) {
+void EvaluationContext::define1d(const std::string& name, const double value) {
   std::ostringstream tmp;
   tmp << std::setprecision(18) << value;
   define(name, tmp.str());
+}
+
+void EvaluationContext::undefine(const std::string& name) {
+  m_defines.erase(name);
 }
 
 }

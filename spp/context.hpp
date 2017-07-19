@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <set>
 #include <string>
+#include <map>
 
 #include "spp/lexer.hpp"
 #include "spp/ast.hpp"
@@ -81,8 +82,6 @@ public:
 
 
 class EvaluationContext {
-public:
-  typedef std::tuple <std::string, std::string> Define;
 
 public:
   explicit EvaluationContext(Library &library);
@@ -91,8 +90,7 @@ public:
 
 private:
   Library &m_library;
-  std::set <std::string> m_define_names;
-  std::vector <Define> m_defines;
+  std::map<std::string, std::string> m_defines;
 
 public:
   void define(const std::string &name, const std::string &rhs);
@@ -105,7 +103,9 @@ public:
   
   void define1d(const std::string &name, const double value);
   
-  inline const std::vector <Define> &defines() const {
+  void undefine(const std::string& name);
+  
+  inline const std::map <std::string, std::string> &defines() const {
     return m_defines;
   }
   

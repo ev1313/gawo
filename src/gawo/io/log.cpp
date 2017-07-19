@@ -26,7 +26,7 @@ namespace io {
 
 const std::size_t AWESOME_BUFFER_SIZE = 512;
 
-std::string awesomef(const char *message, std::va_list args) {
+std::string awesomef(const char* message, std::va_list args) {
   std::string buffer(AWESOME_BUFFER_SIZE, '\0');
   
   std::va_list tmp;
@@ -47,7 +47,7 @@ std::string awesomef(const char *message, std::va_list args) {
   return buffer;
 }
 
-std::string vawesomef(const char *message, ...) {
+std::string vawesomef(const char* message, ...) {
   std::va_list args;
   va_start(args, message);
   std::string result = awesomef(message, args);
@@ -55,7 +55,7 @@ std::string vawesomef(const char *message, ...) {
   return result;
 }
 
-const char *level_name(LogLevel level) {
+const char* level_name(LogLevel level) {
   switch (level) {
     case LOG_DEBUG:
       return "debug";
@@ -75,14 +75,14 @@ const char *level_name(LogLevel level) {
   }
 }
 
-const char *level_ansi_color(LogLevel level) {
-  static std::unordered_map <LogLevel, const char *> ansi({
-                                                            std::make_pair(LOG_DEBUG, "\033[38;5;240m"),
-                                                            std::make_pair(LOG_INFO, "\033[38;5;33m"),
-                                                            std::make_pair(LOG_WARNING, "\033[38;5;214m"),
-                                                            std::make_pair(LOG_ERROR, "\033[38;5;202m"),
-                                                            std::make_pair(LOG_EXCEPTION, "\033[1;38;5;196m")
-                                                          });
+const char* level_ansi_color(LogLevel level) {
+  static std::unordered_map <LogLevel, const char*> ansi({
+                                                           std::make_pair(LOG_DEBUG, "\033[38;5;240m"),
+                                                           std::make_pair(LOG_INFO, "\033[38;5;33m"),
+                                                           std::make_pair(LOG_WARNING, "\033[38;5;214m"),
+                                                           std::make_pair(LOG_ERROR, "\033[38;5;202m"),
+                                                           std::make_pair(LOG_EXCEPTION, "\033[1;38;5;196m")
+                                                         });
   
   auto iter = ansi.find(level);
   if (iter != ansi.end()) {
@@ -93,7 +93,8 @@ const char *level_ansi_color(LogLevel level) {
 }
 
 
-LogPipe::LogPipe(LogLevel level, const Logger &dest) :
+LogPipe::LogPipe(LogLevel level, const Logger& dest)
+  :
   std::ostringstream(), m_level(level), m_dest(dest) {
   
 }
@@ -104,7 +105,8 @@ void LogPipe::submit() {
 }
 
 
-LogSink::LogSink() :
+LogSink::LogSink()
+  :
   m_level(LOG_ALL) {
   
 }
@@ -113,7 +115,7 @@ LogSink::~LogSink() {
 
 }
 
-void LogSink::log(const LogRecord &record) {
+void LogSink::log(const LogRecord& record) {
   {
     std::lock_guard <std::mutex> lock(m_mutex);
     if (record.level < m_level) {
@@ -130,12 +132,13 @@ void LogSink::set_level(LogLevel level) {
 }
 
 
-LogTTYSink::LogTTYSink() :
+LogTTYSink::LogTTYSink()
+  :
   LogSink() {
   
 }
 
-void LogTTYSink::log_direct(const LogRecord &record) {
+void LogTTYSink::log_direct(const LogRecord& record) {
   
   std::cout << level_ansi_color(record.level)
             << "["
@@ -150,7 +153,8 @@ void LogTTYSink::log_direct(const LogRecord &record) {
 }
 
 
-LogAsynchronousSink::LogAsynchronousSink(std::unique_ptr <LogSink> &&backend) :
+LogAsynchronousSink::LogAsynchronousSink(std::unique_ptr <LogSink>&& backend)
+  :
   LogSink(), m_backend(std::move(backend)), m_state_mutex(), m_terminated(false), m_log_queue(), m_wakeup_cv()
   , m_logger(std::bind(&LogAsynchronousSink::thread_impl, this)) {
   
@@ -162,7 +166,7 @@ LogAsynchronousSink::~LogAsynchronousSink() {
   m_logger.join();
 }
 
-void LogAsynchronousSink::log_direct(const LogRecord &record) {
+void LogAsynchronousSink::log_direct(const LogRecord& record) {
   {
     std::lock_guard <std::mutex> lock(m_state_mutex);
     if (!m_synchronous) {
@@ -192,7 +196,7 @@ void LogAsynchronousSink::thread_impl() {
     m_log_queue.clear();
     lock.unlock();
     
-    for (auto &rec: buffer) {
+    for (auto& rec: buffer) {
       m_backend->log_direct(*rec);
     }
     buffer.clear();
@@ -207,18 +211,19 @@ void LogAsynchronousSink::set_synchronous(bool synchronous) {
 }
 
 
-Logger::Logger(RootLogger *root,
-               const std::string &fullpath,
-               const std::string &name) :
+Logger::Logger(RootLogger* root,
+               const std::string& fullpath,
+               const std::string& name)
+  :
   m_fullpath(fullpath), m_name(name), m_root(root), m_children() {
   
 }
 
-std::string Logger::get_child_fullpath(const std::string &name) const {
+std::string Logger::get_child_fullpath(const std::string& name) const {
   return m_fullpath + "." + name;
 }
 
-void Logger::log(LogLevel level, const std::string &message) const {
+void Logger::log(LogLevel level, const std::string& message) const {
   {
     std::lock_guard <std::mutex> lock(m_mutex);
     if (level < m_level) {
@@ -229,7 +234,7 @@ void Logger::log(LogLevel level, const std::string &message) const {
   m_root->log_submit(log_clock_t::now(), level, m_fullpath, message);
 }
 
-void Logger::logf(LogLevel level, const char *format, ...) const {
+void Logger::logf(LogLevel level, const char* format, ...) const {
   if (level < m_level) {
     return;
   }
@@ -243,7 +248,7 @@ void Logger::logf(LogLevel level, const char *format, ...) const {
   m_root->log_submit(timestamp, level, m_fullpath, message);
 }
 
-LogPipe &Logger::log(LogLevel level) const {
+LogPipe& Logger::log(LogLevel level) const {
   return *(new LogPipe(level, *this));
 }
 
@@ -252,38 +257,39 @@ void Logger::set_level(LogLevel level) {
   m_level = level;
 }
 
-Logger &Logger::get_child(const std::string &name) {
+Logger& Logger::get_child(const std::string& name) {
   auto iter = m_children.find(name);
   if (iter != m_children.end()) {
     return *iter->second;
   }
   
-  Logger *new_logger = new Logger(m_root, get_child_fullpath(name), name);
+  Logger* new_logger = new Logger(m_root, get_child_fullpath(name), name);
   new_logger->set_level(m_level);
   m_children.emplace(name, std::unique_ptr <Logger>(new_logger));
   return *new_logger;
 }
 
 
-RootLogger::RootLogger() :
+RootLogger::RootLogger()
+  :
   Logger(this, "root", "root"), m_t0(log_clock_t::now()) {
   m_level = LOG_ALL;
 }
 
-std::string RootLogger::get_child_fullpath(const std::string &name) const {
+std::string RootLogger::get_child_fullpath(const std::string& name) const {
   return name;
 }
 
-LogSink *RootLogger::attach_sink(std::unique_ptr <LogSink> &&src) {
-  LogSink *result = src.get();
+LogSink* RootLogger::attach_sink(std::unique_ptr <LogSink>&& src) {
+  LogSink* result = src.get();
   m_sinks.emplace_back(std::move(src));
   return result;
 }
 
 void RootLogger::log_submit(LogTimestamp timestamp,
                             LogLevel level,
-                            const std::string &logger_path,
-                            const std::string &message) const {
+                            const std::string& logger_path,
+                            const std::string& message) const {
   LogRelativeTimestamp rel_timestamp =
     std::chrono::duration_cast <LogRelativeTimestamp>(
       timestamp - m_t0);
@@ -295,17 +301,17 @@ void RootLogger::log_submit(LogTimestamp timestamp,
   
   LogRecord record{level, timestamp, rel_timestamp, logger_path, message};
   
-  for (auto &sink: m_sinks) {
+  for (auto& sink: m_sinks) {
     sink->log(record);
   }
 }
 
-Logger &RootLogger::get_logger(const std::string &logger) {
+Logger& RootLogger::get_logger(const std::string& logger) {
   if (logger.size() == 0) {
     return *this;
   }
   
-  Logger *curr = this;
+  Logger* curr = this;
   std::string remainder = logger;
   while (true) {
     std::string::size_type dotpos = remainder.find('.');
@@ -320,13 +326,13 @@ Logger &RootLogger::get_logger(const std::string &logger) {
 }
 
 
-RootLogger &logging() {
+RootLogger& logging() {
   static RootLogger logger;
   return logger;
 }
 
-std::ostream &submit(std::ostream &stream) {
-  dynamic_cast<::io::LogPipe &>(stream).submit();
+std::ostream& submit(std::ostream& stream) {
+  dynamic_cast<::io::LogPipe&>(stream).submit();
   return stream;
 }
 

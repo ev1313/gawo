@@ -1,7 +1,7 @@
 #include <gawo/gl/wrapper/glclasses.hpp>
 #include <gawo/io/log.hpp>
 
-static io::Logger &logger = io::logging().get_logger("gawo.gl");
+static io::Logger& logger = io::logging().get_logger("gawo.gl");
 
 VAO::VAO() {}
 
@@ -13,7 +13,7 @@ void VAO::bind() { glBindVertexArray(m_name); }
 
 void VAO::unbind() { glBindVertexArray(0); }
 
-void VAO::fill(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer) {
+void VAO::fill(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer) {
   glEnableVertexAttribArray(index);
   glVertexAttribPointer(index, size, type, normalized, stride, pointer);
 }
@@ -34,7 +34,7 @@ void Texture::activate(GLenum slot) {
 void Texture::unbind() { glBindTexture(GL_TEXTURE_2D, 0); }
 
 void Texture::fill(GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border, GLenum format,
-                   GLenum type, const GLvoid *data) {
+                   GLenum type, const GLvoid* data) {
   bind();
   glTexImage2D(GL_TEXTURE_2D, level, internalFormat, width, height, border, format, type, data);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -127,7 +127,7 @@ bool checkAndPrintGlError() {
   return true;
 }
 
-const char *stringFromGlError(GLenum err) {
+const char* stringFromGlError(GLenum err) {
   switch (err) {
     case GL_INVALID_ENUM:
       return "GL_INVALID_ENUM";

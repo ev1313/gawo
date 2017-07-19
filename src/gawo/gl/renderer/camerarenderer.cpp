@@ -1,6 +1,6 @@
 #include <gawo/gl/renderer/camerarenderer.hpp>
 
-static io::Logger &logger = io::logging().get_logger("gawo.CameraRenderer");
+static io::Logger& logger = io::logging().get_logger("gawo.CameraRenderer");
 
 CameraRenderer::CameraRenderer()
   : SpriteRenderer() {

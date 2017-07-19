@@ -154,7 +154,7 @@ public:
   */
   void initialize();
   
-  void render(Sprite &sprite);
+  void render(Sprite& sprite);
   
   void finish();
   
@@ -166,7 +166,7 @@ public:
   /*
     called for each sprite with the identifier
    */
-  void renderClick(Sprite &sprite, unsigned int i);
+  void renderClick(Sprite& sprite, unsigned int i);
   
   /*
     finishClick returns the clicked sprite or $FFFFFF if nothing clicked/background clicked/etc
