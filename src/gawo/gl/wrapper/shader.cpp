@@ -127,3 +127,12 @@ bool Shader::compileLink() {
 bool Shader::load(const std::string& data, unsigned int shadertype) {
   return false;
 }
+
+void Shader::define(std::string& name, std::string& data) {
+  m_evalctx.define(name, data);
+}
+
+void Shader::undefine(std::string& name) {
+  m_evalctx.undefine(name);
+}
+

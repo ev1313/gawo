@@ -36,10 +36,8 @@ public:
   
   void unbind();
 
-  void setVersion();
-  unsigned int getVersion();
-  void define();
-  void undefine();
+  void define(std::string& name, std::string& data);
+  void undefine(std::string& name);
   
   bool load(const std::string& data, unsigned int shadertype);
   
