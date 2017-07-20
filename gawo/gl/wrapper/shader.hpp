@@ -35,7 +35,12 @@ public:
   void bind();
   
   void unbind();
- 
+
+  void setVersion();
+  unsigned int getVersion();
+  void define();
+  void undefine();
+  
   bool load(const std::string& data, unsigned int shadertype);
   
   bool compileLink();
