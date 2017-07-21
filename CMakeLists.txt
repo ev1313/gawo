@@ -60,7 +60,7 @@ set(PARSER_INC ${CMAKE_CURRENT_BINARY_DIR}/spp/parser.hpp)
 set(SPP_SRC
         src/spp/ast.cpp
         src/spp/context.cpp
-        src/spp/loader.cpp
+        src/spp/library.cpp
         ${LEXER_SRC}
         ${PARSER_SRC}
         )
@@ -68,7 +68,7 @@ set(SPP_INC
         spp/ast.hpp
         spp/context.hpp
         spp/lexer.hpp
-        spp/loader.hpp
+        spp/library.hpp
         spp/spp.hpp
         ${PARSER_INC}
         )

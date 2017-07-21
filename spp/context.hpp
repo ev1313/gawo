@@ -7,7 +7,6 @@
 
 #include "spp/lexer.hpp"
 #include "spp/ast.hpp"
-#include "spp/loader.hpp"
 
 /**
  * This namespace holds the Shader Preprocessor interface and implementation.
@@ -44,39 +43,6 @@ public:
   }
   
   std::unique_ptr <Program> parse();
-  
-};
-
-
-class Library {
-public:
-  Library();
-  
-  explicit Library(std::unique_ptr <Loader> &&loader);
-  
-  virtual ~Library();
-
-protected:
-  unsigned int m_max_include_depth;
-  std::unique_ptr <Loader> m_loader;
-  std::unordered_map <std::string, std::unique_ptr <Program> > m_cache;
-
-protected:
-  void resolve_includes(Program *in_program, unsigned int depth);
-  
-  virtual const Program *_load(const std::string &path, unsigned int depth);
-
-public:
-  const Program *load(const std::string &path);
-
-public:
-  inline void set_loader(std::unique_ptr <Loader> &&loader) {
-    m_loader = std::move(loader);
-  }
-  
-  inline void set_max_include_depth(unsigned int depth) {
-    m_max_include_depth = depth;
-  }
   
 };
 

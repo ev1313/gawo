@@ -1,6 +1,7 @@
 #include <catch.hpp>
 
 #include "spp/context.hpp"
+#include "spp/library.hpp"
 
 
 using namespace spp;

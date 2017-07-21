@@ -15,7 +15,7 @@ Shader::~Shader() {}
 
 void Shader::init() { m_program = glCreateProgram(); }
 
-bool Shader::check() {
+bool Shader::checkLinkStatus() {
   GLint len = 0;
   GLint result = 0;
   
@@ -33,7 +33,7 @@ bool Shader::check() {
   return (bool) result;
 }
 
-bool Shader::checkShader(GLuint shader) {
+bool Shader::checkShaderCompileStatus(GLuint shader) {
   GLint len = 0;
   GLint result = 0;
   
@@ -74,11 +74,11 @@ bool Shader::loadCompileLink(const std::string& data, GLenum shadertype) {
   const char* shaderdata = data.c_str();
   glShaderSource(shader, 1, &shaderdata, NULL);
   glCompileShader(shader);
-  checkShader(shader);
+  checkShaderCompileStatus(shader);
   
   glAttachShader(m_program, shader);
   glLinkProgram(m_program);
-  check();
+  checkLinkStatus();
   
   glDeleteShader(shader);
   

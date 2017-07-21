@@ -3,6 +3,7 @@
 #include <unordered_map>
 
 #include "spp/spp.hpp"
+#include "spp/library.hpp"
 
 
 class DummyDataLoader : public spp::Loader {

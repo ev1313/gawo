@@ -5,6 +5,7 @@
 #include "spp/spp.hpp"
 
 #include "testdata.hpp"
+#include "spp/library.hpp"
 
 using namespace spp;
 
